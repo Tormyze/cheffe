@@ -8,7 +8,7 @@ interface ButtonProps {
 
 export default function Button({ children, onClick, className }: ButtonProps) {
   return (
-    <button className={`px-6 py-3 rounded-lg ${className || ''}`} onClick={onClick}>
+    <button className={`font-medium px-6 py-3 rounded-xl ${className || ""}`} onClick={onClick}>
       {children}
     </button>
   );
