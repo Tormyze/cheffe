@@ -5,7 +5,7 @@ import { mockRecipes } from "../../../mocks/recipesMock";
 
 export default function Featured() {
   return (
-    <div className="text-black">
+    <section className="text-black">
       <Container className="py-6 space-y-6">
         <article className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
@@ -28,6 +28,6 @@ export default function Featured() {
           ))}
         </article>
       </Container>
-    </div>
+    </section>
   );
 }

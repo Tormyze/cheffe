@@ -5,7 +5,7 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
     recipe.prepTime > 60 ? `${recipe.prepTime / 60} h` : `${recipe.prepTime} min`;
 
   return (
-    <article className="flex items-center gap-3 font-['Spectral'] text-Color-Scheme-5-Text">
+    <article className="flex items-center gap-3 font-spectral">
       <img
         src={recipe.imgUrl}
         alt={recipe.title}
@@ -13,15 +13,15 @@ export default function RecipeCard({ recipe }: { recipe: Recipe }) {
       />
       <div className="flex flex-1 flex-col gap-1">
         <div>
-          <h3 className="text-base font-semibold leading-tight sm:text-lg">
+          <h3 className="text-base font-semibold leading-tight">
             {recipe.title}
           </h3>
-          <p className="text-xs font-normal opacity-80 sm:text-sm">
+          <p className="text-xs font-normal opacity-80">
             {recipe.category}
           </p>
         </div>
 
-        <span className="text-base font-semibold sm:text-lg">
+        <span className="text-base font-semibold">
           {prepTimeLabel}
         </span>
       </div>

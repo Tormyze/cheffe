@@ -3,7 +3,7 @@ import Button from "../../../components/Button";
 
 export default function Hero() {
   return (
-    <div className="relative bg-[url('./hero-bg.jpg')] bg-cover bg-center bg-no-repeat flex flex-col">
+    <section className="relative bg-[url('./hero-bg.jpg')] bg-cover bg-center bg-no-repeat flex flex-col">
       <div className="absolute inset-0 bg-black/50" />
       <Container className="relative z-10 flex flex-col items-center justify-center grow py-10 gap-8">
         <article className="flex flex-col items-center gap-6">
@@ -26,6 +26,6 @@ export default function Hero() {
           </p>
         </article>
       </Container>
-    </div>
+    </section>
   );
 }
