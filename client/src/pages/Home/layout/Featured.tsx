@@ -5,8 +5,8 @@ import { mockRecipes } from "../../../mocks/recipesMock";
 
 export default function Featured() {
   return (
-    <section className="text-black">
-      <Container className="py-6 space-y-6">
+    <section className="text-black py-6">
+      <Container className="space-y-6">
         <article className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <h3 className="text-xs font-medium">Destaques</h3>
