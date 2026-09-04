@@ -3,7 +3,7 @@ import CategoryCard from "../../../components/CategoryCard";
 
 export default function Categories() {
   return (
-    <section className="bg-black py-6">
+    <section className="bg-black py-6 sm:py-12 lg:py-20">
       <Container className="flex flex-col gap-6">
         <header className="max-w-3xl mx-auto flex flex-col gap-2 text-center sm:gap-4">
           <span className="font-spectral text-sm font-semibold text-zest sm:text-base">
@@ -24,28 +24,34 @@ export default function Categories() {
           <CategoryCard
             category="Doces"
             description="Brigadeiros, bolos e tudo que adoça a vida"
+            linkTo="#"
           />
           <CategoryCard
             category="Lanches"
             description="Coxinhas, empadas e petiscos para qualquer hora"
+            linkTo="#"
           />
           <CategoryCard
             category="Massas"
             description="Macarrão, lasanha e pratos que abraçam a alma"
             isLarge
+            linkTo="#"
           />
           <CategoryCard
             category="Bebidas"
             description="Sucos, drinks e tudo para acompanhar sua refeição"
             isLarge
+            linkTo="#"
           />
           <CategoryCard
             category="Almoço"
             description="O Brasil inteiro em um só lugar para você"
+            linkTo="#"
           />
           <CategoryCard
             category="Sobremesas"
             description="O final perfeito para qualquer refeição em família"
+            linkTo="#"
           />
         </article>
       </Container>

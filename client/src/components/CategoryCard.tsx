@@ -7,12 +7,14 @@ interface CategoryCardProps {
   category: Category;
   description: string;
   isLarge?: boolean;
+  linkTo: string;
 }
 
 export default function CategoryCard({
   category,
   description,
   isLarge = false,
+  linkTo
 }: CategoryCardProps) {
   const categoryRecipes = mockRecipes.filter((r) => r.category === category); // pega as receitas somente dessa categoria
 
@@ -57,7 +59,7 @@ export default function CategoryCard({
         </div>
 
         <NavLink
-          to={`#`}
+          to={linkTo}
           className="inline-flex items-center gap-1 font-spectral text-xs font-medium sm:text-base"
         >
           <span>Ver receitas</span>
