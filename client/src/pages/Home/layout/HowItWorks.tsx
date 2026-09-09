@@ -28,18 +28,17 @@ const stepsData = [
   },
 ];
 
-export default function HowWorks() {
+export default function HowItWorks() {
   return (
-    <section className="bg-black py-12 sm:py-20 lg:py-28">
+    <section className="bg-zest py-10 sm:py-20 lg:py-28">
       <Container className="flex flex-col gap-8 sm:gap-14 lg:gap-16">
         <header className="mx-auto flex max-w-2xl flex-col items-center gap-2 text-center sm:gap-4">
-          <span className="font-spectral text-sm font-semibold text-zest sm:text-base">
+          <span className="font-spectral text-sm font-semibold sm:text-base">
             Como funciona
           </span>
 
           <h2 className="text-3xl font-medium leading-tight sm:text-4xl lg:text-5xl">
-            <span className="text-zest">Cozinhe </span>
-            sem complicação
+            Cozinhe sem complicação
           </h2>
 
           <p className="font-spectral text-sm leading-relaxed sm:text-base lg:text-lg">
