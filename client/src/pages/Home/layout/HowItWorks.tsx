@@ -30,7 +30,7 @@ const stepsData = [
 
 export default function HowItWorks() {
   return (
-    <section className="bg-zest py-10 sm:py-20 lg:py-28">
+    <section id="how-it-works" className="bg-zest py-10 sm:py-20 lg:py-28">
       <Container className="flex flex-col gap-8 sm:gap-14 lg:gap-16">
         <header className="mx-auto flex max-w-2xl flex-col items-center gap-2 text-center sm:gap-4">
           <span className="font-spectral text-sm font-semibold sm:text-base">

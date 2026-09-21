@@ -5,7 +5,7 @@ import { NavLink } from "react-router";
 
 export default function About() {
   return (
-    <section className="py-6 sm:py-20 lg:py-28">
+    <section id="about" className="py-6 sm:py-20 lg:py-28">
       <Container className="text-black flex flex-col gap-6">
         <article className="flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:gap-16 xl:gap-20">
           <div className="flex flex-1 flex-col items-start gap-4 sm:gap-8">

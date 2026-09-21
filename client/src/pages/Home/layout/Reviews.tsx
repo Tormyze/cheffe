@@ -27,7 +27,7 @@ const reviewsData: ReviewCardProps[] = [
 
 export default function Reviews() {
   return (
-    <section className="bg-black py-12 sm:py-20 lg:py-28">
+    <section id="reviews" className="bg-black py-12 sm:py-20 lg:py-28">
       <Container className="flex flex-col gap-10 sm:gap-14 lg:gap-16">
         <header className="mx-auto flex max-w-2xl flex-col items-center gap-2 text-center sm:gap-4">
           <h2 className="font-aleo text-3xl font-medium leading-tight sm:text-4xl lg:text-5xl">
