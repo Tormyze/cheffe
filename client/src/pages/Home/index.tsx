@@ -4,6 +4,7 @@ import Categories from "./layout/Categories";
 import About from "./layout/About";
 import HowItWorks from "./layout/HowItWorks";
 import Reviews from "./layout/Reviews";
+import CTA from "./layout/CTA";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <About />
       <HowItWorks />
       <Reviews />
+      <CTA />
     </>
   );
 }
