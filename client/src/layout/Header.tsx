@@ -7,7 +7,7 @@ export default function Header() {
       <Container>
         <div className="flex justify-between items-center">
           <img src="/logo.svg" alt="Cheffe Logo" className="h-7" />
-          <button className="p-2">
+          <button className="py-2">
             <Menu className="text-zest" />
           </button>
         </div>

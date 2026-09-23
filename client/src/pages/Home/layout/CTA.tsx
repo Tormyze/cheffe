@@ -5,8 +5,8 @@ export default function CTA() {
   return (
     <section className="text-black py-12 sm:py-20 lg:py-28">
       <Container>
-        <article className="flex flex-col items-center gap-8 lg:flex-row lg:items-center lg:gap-16 xl:gap-20">
-          <div className="flex flex-1 flex-col items-start gap-6 sm:gap-8">
+        <article className="flex flex-col lg:items-center gap-8 lg:flex-row lg:gap-16 xl:gap-20">
+          <div className="flex flex-1 flex-col lg:items-start gap-6 sm:gap-8">
             <div className="flex flex-col gap-3 sm:gap-4">
               <h2 className="text-3xl font-medium leading-tight sm:text-4xl lg:text-5xl lg:leading-[1.2]">
                 Encontre o que você ama
@@ -17,10 +17,10 @@ export default function CTA() {
             </div>
 
             <div className="flex flex-wrap items-center gap-3 sm:gap-6">
-              <Button className="bg-linear-to-r from-zest to-zest-light text-xs font-spectral text-white shadow-md sm:text-sm">
+              <Button className="bg-linear-to-r from-zest to-zest-light text-xs font-spectral text-white shadow-md transition-all hover:cursor-pointer hover:brightness-105 sm:text-sm">
                 Buscar
               </Button>
-              <Button className="text-xs font-spectral border border-black-20 text-black sm:text-sm">
+              <Button className="text-xs font-spectral border border-black-20 text-black hover:cursor-pointer hover:opacity-90 sm:text-sm">
                 Explorar
               </Button>
             </div>

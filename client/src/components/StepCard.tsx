@@ -22,7 +22,7 @@ export default function StepCard({
 }: StepCardProps) {
   return (
     <article className="flex w-full flex-col justify-between overflow-hidden rounded-2xl bg-white text-black">
-      <div className="flex flex-col gap-5 p-6 sm:gap-6 sm:p-8">
+      <div className="flex flex-col flex-1 justify-between gap-5 p-6 sm:gap-6 sm:p-8">
         <div className="flex flex-col gap-2">
           <span className="font-spectral text-sm font-semibold text-zest sm:text-base">
             {step}
@@ -41,7 +41,7 @@ export default function StepCard({
         <div>
           <NavLink
             to={linkTo}
-            className="inline-flex items-center gap-2 font-spectral text-sm font-medium sm:text-base"
+            className="inline-flex items-center gap-2 font-spectral text-sm font-medium transition-opacity hover:opacity-90 sm:text-base"
           >
             <span>{linkText}</span>
             <ChevronRight className="w-4" />

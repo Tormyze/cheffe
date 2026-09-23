@@ -60,7 +60,7 @@ export default function CategoryCard({
 
         <NavLink
           to={linkTo}
-          className="inline-flex items-center gap-1 font-spectral text-xs font-medium sm:text-base"
+          className="inline-flex items-center gap-1 font-spectral text-xs font-medium transition-opacity hover:opacity-90 sm:text-base"
         >
           <span>Ver receitas</span>
           <ChevronRight className="w-3 sm:w-4" />

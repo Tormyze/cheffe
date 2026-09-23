@@ -16,7 +16,7 @@ export default function ScrollToAnchor() {
 
       return () => clearTimeout(timer);
     } else {
-      // se navegar para uma rota sem hash, sobe para o topo
+      // se navegar para outra rota (sem hash), sobe para o topo
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [hash, pathname]);

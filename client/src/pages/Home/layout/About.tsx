@@ -27,13 +27,13 @@ export default function About() {
             </div>
 
             <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-              <Button className="text-xs font-spectral border-2 border-black-20">
+              <Button className="text-xs font-spectral border-2 border-black-20 hover:cursor-pointer hover:opacity-90 sm:text-sm">
                 Explorar
               </Button>
 
               <NavLink
                 to="#"
-                className="inline-flex items-center gap-2 font-spectral text-sm font-medium transition-opacity hover:opacity-75 sm:text-base"
+                className="inline-flex items-center gap-2 font-spectral text-sm font-medium transition-opacity hover:opacity-90 sm:text-base"
               >
                 Saiba mais
                 <ChevronRight className="w-4" />
