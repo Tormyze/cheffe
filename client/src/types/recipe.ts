@@ -9,18 +9,22 @@ export interface Recipe {
 }
 
 export interface Ingredient {
-    id: string;
-    name: string;
-    amount: string; // e.g., "1 cup", "2 tbsp", etc.
+  id: string;
+  name: string;
+  amount: string; // e.g., "1 cup", "2 tbsp", etc.
 }
 
-export type Category = 
-  | 'Almoço'
-  | 'Jantar'
-  | 'Café da manhã'
-  | 'Doces'
-  | 'Lanches'
-  | 'Massas'
-  | 'Vegetariano'
-  | 'Bebidas'
-  | 'Sobremesas';
+export const CATEGORIES = [
+  "Café da manhã",
+  "Almoço",
+  "Jantar",
+  "Lanches",
+  "Doces",
+  "Sobremesas",
+  "Vegetariano",
+  "Massas",
+  "Bebidas",
+] as const;
+
+// types gerados automaticamente a partir do array acima
+export type Category = (typeof CATEGORIES)[number];
