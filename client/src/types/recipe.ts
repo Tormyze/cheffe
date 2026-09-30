@@ -5,13 +5,15 @@ export interface Recipe {
   category: Category;
   prepTime: number;
   ingredients: Ingredient[];
-  instructions: string[];
+  steps: string[];
 }
 
 export interface Ingredient {
   id: string;
   name: string;
-  amount: string; // e.g., "1 cup", "2 tbsp", etc.
+  amount?: number;       // apenas o número, ex: 1, 25, 8
+  unit?: string;         // "l", "g", "colher de sopa"
+  description?: string;  // "1 lata de leite condensado (395g)"
 }
 
 export const CATEGORIES = [

@@ -3,7 +3,7 @@ import { Menu } from 'lucide-react';
 
 export default function Header() {
   return (
-    <header className="w-full py-2">
+    <header className="w-full py-2 border-b-4 border-zest">
       <Container>
         <div className="flex justify-between items-center">
           <img src="/logo.svg" alt="Cheffe Logo" className="h-7" />
