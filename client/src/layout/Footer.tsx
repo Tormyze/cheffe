@@ -97,7 +97,7 @@ export default function Footer() {
               </li>
               <li>
                 <NavLink
-                  to="/#featured"
+                  to="/receitas"
                   className="hover:text-zest transition-colors"
                 >
                   Receitas
@@ -113,7 +113,7 @@ export default function Footer() {
               </li>
               <li>
                 <NavLink
-                  to="#"
+                  to="/#featured"
                   className="hover:text-zest transition-colors"
                 >
                   Explorar

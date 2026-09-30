@@ -1,5 +1,6 @@
 import Container from "../../../layout/Container";
 import Button from "../../../components/Button";
+import { Link } from "react-router/internal/react-server-client";
 
 export default function Hero() {
   return (
@@ -13,12 +14,16 @@ export default function Hero() {
               Aprenda a cozinhar o Brasil de verdade
             </h1>
             <div className="flex items-center gap-4">
-              <Button className="bg-linear-to-r from-zest to-zest-light px-6 py-2.5 text-sm font-spectral text-white shadow-md transition-all hover:brightness-105 sm:text-base">
-                Buscar
-              </Button>
-              <Button className="border border-zest-light px-6 py-2.5 text-sm font-spectral text-zest-light transition-all hover:bg-zest-light/10">
-                Explorar
-              </Button>
+              <Link to="/receitas" state={{ autoFocusSearch: true }}> {/* a página de receitas já abre com o input de pesquisa focado */}
+                <Button className="bg-linear-to-r from-zest to-zest-light px-6 py-2.5 text-sm font-spectral text-white shadow-md transition-all hover:brightness-105 sm:text-base">
+                  Buscar
+                </Button>
+              </Link>
+              <Link to="#featured">
+                <Button className="border border-zest-light px-6 py-2.5 text-sm font-spectral text-zest-light transition-all hover:bg-zest-light/10">
+                  Explorar
+                </Button>
+              </Link>
             </div>
           </div>
 

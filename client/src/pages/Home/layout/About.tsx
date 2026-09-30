@@ -1,7 +1,7 @@
 import Container from "../../../layout/Container";
 import Button from "../../../components/Button";
 import { ChevronRight } from "lucide-react";
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 
 export default function About() {
   return (
@@ -27,13 +27,15 @@ export default function About() {
             </div>
 
             <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-              <Button className="text-xs font-spectral border-2 border-black-20 hover:opacity-90 sm:text-sm">
-                Explorar
-              </Button>
+              <Link to="#featured">
+                <Button className="text-xs font-spectral border-2 border-black-20 hover:opacity-90 sm:text-sm">
+                  Explorar
+                </Button>
+              </Link>
 
               <NavLink
                 to="#"
-                className="inline-flex items-center gap-2 font-spectral text-sm font-medium transition-opacity hover:opacity-90 sm:text-base"
+                className="inline-flex items-center gap-2 font-spectral text-sm font-medium hover:underline sm:text-base"
               >
                 Saiba mais
                 <ChevronRight className="w-4" />

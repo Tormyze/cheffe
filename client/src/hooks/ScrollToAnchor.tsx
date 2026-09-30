@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router";
 
 export default function ScrollToAnchor() {
-  const { hash, pathname } = useLocation();
+  const { hash, pathname, key } = useLocation();
 
   useEffect(() => {
     if (hash) {
@@ -19,7 +19,7 @@ export default function ScrollToAnchor() {
       // se navegar para outra rota (sem hash), sobe para o topo
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [hash, pathname]);
+  }, [hash, pathname, key]);
 
   return null;
 }

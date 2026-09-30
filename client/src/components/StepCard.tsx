@@ -41,7 +41,7 @@ export default function StepCard({
         <div>
           <NavLink
             to={linkTo}
-            className="inline-flex items-center gap-2 font-spectral text-sm font-medium transition-opacity hover:opacity-90 sm:text-base"
+            className="inline-flex items-center gap-2 font-spectral text-sm font-medium hover:underline sm:text-base"
           >
             <span>{linkText}</span>
             <ChevronRight className="w-4" />

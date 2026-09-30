@@ -1,6 +1,7 @@
 import Container from "../../../layout/Container";
 import Button from "../../../components/Button";
 import RecipeCard from "../../../components/RecipeCard";
+import { Link } from "react-router";
 import { mockRecipes } from "../../../mocks/recipesMock";
 
 export default function Featured() {
@@ -16,9 +17,11 @@ export default function Featured() {
             </p>
           </div>
           <div>
-            <Button className="text-xs border border-black-20 hover:opacity-90 sm:text-sm">
-              Ver todas
-            </Button>
+            <Link to="/receitas">
+              <Button className="text-xs border border-black-20 hover:opacity-90 sm:text-sm">
+                Ver todas
+              </Button>
+            </Link>
           </div>
         </article>
         <article className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6">

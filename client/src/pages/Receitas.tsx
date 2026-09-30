@@ -1,13 +1,27 @@
+import { useState, useEffect, useRef } from "react";
+import { useSearchParams, useLocation } from "react-router";
 import Container from "../layout/Container";
 import RecipeCard from "../components/RecipeCard";
 import { Search } from "lucide-react";
 import { mockRecipes } from "../mocks/recipesMock";
 import { CATEGORIES } from "../types/recipe";
-import { useState } from "react";
 
 export default function Receitas() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  // categoria passada na URL (se houver)
+  const selectedCategory = searchParams.get("categoria");
+
+  // foca o mouse na barra de pesquisa se a rota for acessada com o estado autoFocusSearch
+  useEffect(() => {
+    if (location.state?.autoFocusSearch && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [location.state]);
 
   const filteredRecipes = mockRecipes.filter((recipe) => {
     const matchesSearch = recipe.title
@@ -21,7 +35,14 @@ export default function Receitas() {
   });
 
   const toggleCategory = (category: string) => {
-    setSelectedCategory((prev) => (prev === category ? null : category));
+    const isCurrentlySelected =
+      selectedCategory?.toLowerCase() === category.toLowerCase();
+      
+    if (isCurrentlySelected) {
+      setSearchParams({});
+    } else {
+      setSearchParams({ categoria: category });
+    }
   };
 
   return (
@@ -40,6 +61,7 @@ export default function Receitas() {
           <div className="relative w-full max-w-xl">
             <Search className="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-black-60" />
             <input
+              ref={searchInputRef}
               type="text"
               placeholder="Search"
               value={searchTerm}
@@ -50,7 +72,8 @@ export default function Receitas() {
 
           <div className="-mx-4 flex gap-2.5 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:px-0 sm:pb-0">
             {CATEGORIES.map((category) => {
-              const isSelected = selectedCategory === category;
+              const isSelected =
+                selectedCategory?.toLowerCase() === category.toLowerCase();
               return (
                 <button
                   key={category}
@@ -73,7 +96,11 @@ export default function Receitas() {
         {filteredRecipes.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 sm:gap-8">
             {filteredRecipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} className="hover:cursor-pointer" />
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                className="hover:cursor-pointer"
+              />
             ))}
           </div>
         ) : (

@@ -1,5 +1,6 @@
 import Container from "../../../layout/Container";
 import Button from "../../../components/Button";
+import { Link } from "react-router/internal/react-server-client";
 
 export default function CTA() {
   return (
@@ -16,13 +17,18 @@ export default function CTA() {
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-              <Button className="bg-linear-to-r from-zest to-zest-light text-xs font-spectral text-white shadow-md transition-all hover:brightness-105 sm:text-sm">
-                Buscar
-              </Button>
-              <Button className="text-xs font-spectral border border-black-20 text-black hover:opacity-90 sm:text-sm">
-                Explorar
-              </Button>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <Link to="/receitas" state={{ autoFocusSearch: true }}>
+                {/* a página de receitas já abre com o input de pesquisa focado */}
+                <Button className="bg-linear-to-r from-zest to-zest-light text-xs font-spectral text-white shadow-md transition-all hover:brightness-105 sm:text-sm">
+                  Buscar
+                </Button>
+              </Link>
+              <Link to="#featured">
+                <Button className="text-xs font-spectral border border-black-20 text-black hover:opacity-90 sm:text-sm">
+                  Explorar
+                </Button>
+              </Link>
             </div>
           </div>
 

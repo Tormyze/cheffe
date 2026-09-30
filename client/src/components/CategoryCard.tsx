@@ -1,27 +1,29 @@
+import { Link, NavLink } from "react-router";
 import { mockRecipes } from "../mocks/recipesMock";
 import type { Category } from "../types/recipe";
 import { ChevronRight } from "lucide-react";
-import { NavLink } from "react-router";
 
 interface CategoryCardProps {
   category: Category;
   description: string;
   isLarge?: boolean;
-  linkTo: string;
 }
 
 export default function CategoryCard({
   category,
   description,
   isLarge = false,
-  linkTo
 }: CategoryCardProps) {
-  const categoryRecipes = mockRecipes.filter((r) => r.category === category); // pega as receitas somente dessa categoria
+  const categoryRecipes = mockRecipes.filter((r) => r.category === category);
 
   const coverImage =
-    categoryRecipes[0]?.imgUrl || "https://placehold.co/400x300"; // pega a imagem da primeira receita que aparecer
+    categoryRecipes[0]?.imgUrl || "https://placehold.co/400x300";
 
-  const tags = categoryRecipes.slice(0, 3).map((r) => r.title); // pega até 3 títulos de receitas pra usar como tags
+  // pega até 3 receitas como tags
+  const tags = categoryRecipes.slice(0, 3);
+
+  // redireciona para a página de receitas com a categoria selecionada
+  const targetUrl = `/receitas?categoria=${encodeURIComponent(category)}`;
 
   return (
     <article className="flex flex-col w-full overflow-hidden rounded-2xl bg-white text-black">
@@ -46,12 +48,14 @@ export default function CategoryCard({
 
           {tags.length > 0 && (
             <ul className="flex flex-wrap gap-1 sm:gap-2">
-              {tags.map((title) => (
-                <li
-                  key={title}
-                  className="text-black text-[10px]  px-2 py-0.5 font-semibold leading-4 rounded-md outline-1 sm:px-2.5 sm:py-1 sm:text-sm sm:leading-5"
-                >
-                  {title}
+              {tags.map((recipe) => (
+                <li key={recipe.id}>
+                  <Link
+                    to={`/receitas/${recipe.id}`}
+                    className="inline-block text-black text-xs px-2.5 py-1 font-semibold rounded-md border border-black/20 hover:border-black hover:bg-black/5 transition-colors sm:px-3 sm:py-1 sm:text-sm"
+                  >
+                    {recipe.title}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -59,8 +63,8 @@ export default function CategoryCard({
         </div>
 
         <NavLink
-          to={linkTo}
-          className="inline-flex items-center gap-1 font-spectral text-xs font-medium transition-opacity hover:opacity-90 sm:text-base"
+          to={targetUrl}
+          className="inline-flex items-center gap-1 font-spectral text-xs font-medium hover:underline sm:text-base"
         >
           <span>Ver receitas</span>
           <ChevronRight className="w-3 sm:w-4" />

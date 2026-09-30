@@ -24,34 +24,28 @@ export default function Categories() {
           <CategoryCard
             category="Doces"
             description="Brigadeiros, bolos e tudo que adoça a vida"
-            linkTo="#"
           />
           <CategoryCard
             category="Lanches"
             description="Coxinhas, empadas e petiscos para qualquer hora"
-            linkTo="#"
           />
           <CategoryCard
             category="Massas"
             description="Macarrão, lasanha e pratos que abraçam a alma"
             isLarge
-            linkTo="#"
           />
           <CategoryCard
             category="Bebidas"
             description="Sucos, drinks e tudo para acompanhar sua refeição"
             isLarge
-            linkTo="#"
           />
           <CategoryCard
             category="Almoço"
             description="O Brasil inteiro em um só lugar para você"
-            linkTo="#"
           />
           <CategoryCard
             category="Sobremesas"
             description="O final perfeito para qualquer refeição em família"
-            linkTo="#"
           />
         </article>
       </Container>
