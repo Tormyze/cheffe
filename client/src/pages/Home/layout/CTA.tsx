@@ -16,11 +16,11 @@ export default function CTA() {
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 sm:gap-6">
-              <Button className="bg-linear-to-r from-zest to-zest-light text-xs font-spectral text-white shadow-md transition-all hover:cursor-pointer hover:brightness-105 sm:text-sm">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+              <Button className="bg-linear-to-r from-zest to-zest-light text-xs font-spectral text-white shadow-md transition-all hover:brightness-105 sm:text-sm">
                 Buscar
               </Button>
-              <Button className="text-xs font-spectral border border-black-20 text-black hover:cursor-pointer hover:opacity-90 sm:text-sm">
+              <Button className="text-xs font-spectral border border-black-20 text-black hover:opacity-90 sm:text-sm">
                 Explorar
               </Button>
             </div>

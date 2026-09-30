@@ -8,7 +8,7 @@ interface ButtonProps {
 
 export default function Button({ children, onClick, className }: ButtonProps) {
   return (
-    <button className={`font-medium px-6 py-3 rounded-xl ${className || ""}`} onClick={onClick}>
+    <button className={`font-medium px-6 py-3 rounded-xl hover:cursor-pointer ${className || ""}`} onClick={onClick}>
       {children}
     </button>
   );

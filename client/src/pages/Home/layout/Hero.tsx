@@ -13,10 +13,10 @@ export default function Hero() {
               Aprenda a cozinhar o Brasil de verdade
             </h1>
             <div className="flex items-center gap-4">
-              <Button className="bg-linear-to-r from-zest to-zest-light px-6 py-2.5 text-sm font-spectral text-white shadow-md transition-all hover:cursor-pointer hover:brightness-105 sm:text-base">
+              <Button className="bg-linear-to-r from-zest to-zest-light px-6 py-2.5 text-sm font-spectral text-white shadow-md transition-all hover:brightness-105 sm:text-base">
                 Buscar
               </Button>
-              <Button className="border border-zest-light px-6 py-2.5 text-sm font-spectral text-zest-light transition-all hover:cursor-pointer hover:bg-zest-light/10">
+              <Button className="border border-zest-light px-6 py-2.5 text-sm font-spectral text-zest-light transition-all hover:bg-zest-light/10">
                 Explorar
               </Button>
             </div>

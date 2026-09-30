@@ -16,7 +16,7 @@ export default function Featured() {
             </p>
           </div>
           <div>
-            <Button className="text-xs border border-black-20 hover:cursor-pointer hover:opacity-90 sm:text-sm">
+            <Button className="text-xs border border-black-20 hover:opacity-90 sm:text-sm">
               Ver todas
             </Button>
           </div>
