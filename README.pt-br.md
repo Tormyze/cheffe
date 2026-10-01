@@ -4,7 +4,7 @@
 
 Uma aplicação de receitas brasileiras moderna, responsiva e funcional.
 
-![Thumb]()
+![Thumb](https://github.com/user-attachments/assets/0ba9623b-40a8-4194-84cc-ff4d340261ba)
 
 🔗 Acesse o projeto online: [Cheffe](https://cheffe-smoky.vercel.app)
 
