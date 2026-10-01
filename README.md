@@ -4,7 +4,7 @@
 
 A modern, responsive, and functional **Brazilian recipe application**.
 
-![Thumb]()
+![Thumb](https://github.com/user-attachments/assets/0ba9623b-40a8-4194-84cc-ff4d340261ba)
 
 🔗 Access the live project: [Cheffe](https://cheffe-smoky.vercel.app)
 
