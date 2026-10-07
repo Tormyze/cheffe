@@ -7,7 +7,7 @@ const stepsData = [
     title: "Escolha a receita que chama seu nome",
     description: "Navegue pelas categorias ou busque pelo prato desejado.",
     linkText: "Explorar",
-    linkTo: "#",
+    linkTo: "#categories",
     imageUrl: "https://images.unsplash.com/photo-1625937286074-9ca519d5d9df?ixlib=rb-4.1.0&q=85&fm=jpg&crop=entropy&cs=srgb",
   },
   {
@@ -15,7 +15,7 @@ const stepsData = [
     title: "Siga o passo a passo sem medo",
     description: "Ingredientes claros e instruções diretas para você executar bem.",
     linkText: "Ver receitas",
-    linkTo: "#",
+    linkTo: "/receitas",
     imageUrl: "https://images.unsplash.com/photo-1653233797467-1a528819fd4f?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9tZSUyMGNvb2t8ZW58MHx8MHx8fDA%3D",
   },
   {
@@ -23,7 +23,7 @@ const stepsData = [
     title: "Aproveite o seu mais novo sabor",
     description: "Reúna-se com quem você ama e volte sempre que quiser, quando quiser.",
     linkText: "Destaques",
-    linkTo: "#",
+    linkTo: "#featured",
     imageUrl: "https://images.unsplash.com/photo-1592861956120-e524fc739696?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cmVzdGF1cmFudCUyMGVhdHxlbnwwfHwwfHx8MA%3D%3D",
   },
 ];

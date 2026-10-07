@@ -46,7 +46,7 @@ export default function Receitas() {
   };
 
   return (
-    <main className="py-6 sm:py-16 text-black">
+    <div className="py-6 sm:py-16 text-black">
       <Container className="space-y-6 sm:space-y-12">
         <header className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
@@ -109,6 +109,6 @@ export default function Receitas() {
           </div>
         )}
       </Container>
-    </main>
+    </div>
   );
 }

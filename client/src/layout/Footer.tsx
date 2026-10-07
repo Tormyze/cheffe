@@ -49,7 +49,7 @@ export default function Footer() {
                 <img src={facebook} alt="Facebook" className="h-5 w-5" />
               </a>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/tormyze/"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Instagram"
@@ -67,7 +67,7 @@ export default function Footer() {
                 <img src={x} alt="X" className="h-5 w-5" />
               </a>
               <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/in/paulojr-tormyze/"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="LinkedIn"
@@ -76,7 +76,7 @@ export default function Footer() {
                 <img src={linkedin} alt="LinkedIn" className="h-5 w-5" />
               </a>
               <a
-                href="https://youtube.com"
+                href="https://www.youtube.com/@tormyze"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Youtube"
