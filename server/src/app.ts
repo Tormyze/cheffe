@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import routes from "./routes/recipeRoutes.js";
 
 dotenv.config();
 
@@ -10,10 +11,11 @@ app.use(cors());
 
 const PORT = process.env.PORT || 3001;
 
-// app.get('/receitas', (req, res) => {
-//   res.status(200).send('Deu certo!');
-// });
+// todas as rotas da API serão prefixadas com /api
+app.use('/api', routes);
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}!`);
 });
+
+// app.ts - arquivo de configuração do server
