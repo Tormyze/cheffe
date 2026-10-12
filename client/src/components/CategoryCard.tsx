@@ -1,7 +1,8 @@
+import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router";
-import { mockRecipes } from "../mocks/recipesMock";
-import type { Category } from "../types/recipe";
 import { ChevronRight } from "lucide-react";
+import api from "../services/api";
+import type { Category, Recipe } from "../types/recipe";
 
 interface CategoryCardProps {
   category: Category;
@@ -14,7 +15,29 @@ export default function CategoryCard({
   description,
   isLarge = false,
 }: CategoryCardProps) {
-  const categoryRecipes = mockRecipes.filter((r) => r.category === category);
+  const [categoryRecipes, setCategoryRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadCategoryRecipes() {
+      try {
+        setLoading(true);
+        const response = await api.get<Recipe[]>("/recipes");
+        
+        // Filtra localmente apenas as receitas pertencentes a esta categoria
+        const filtered = response.data.filter(
+          (r) => r.category.toLowerCase() === category.toLowerCase()
+        );
+        setCategoryRecipes(filtered);
+      } catch (error) {
+        console.error(`Erro ao carregar receitas para ${category}:`, error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadCategoryRecipes();
+  }, [category]);
 
   const coverImage =
     categoryRecipes[0]?.imgUrl || "https://placehold.co/400x300";
@@ -22,18 +45,26 @@ export default function CategoryCard({
   // pega até 3 receitas como tags
   const tags = categoryRecipes.slice(0, 3);
 
-  // redireciona para a página de receitas com a categoria selecionada
+  // redireciona para as receitas com a categoria já filtrada
   const targetUrl = `/receitas?categoria=${encodeURIComponent(category)}`;
 
   return (
     <article className="flex flex-col w-full overflow-hidden rounded-2xl bg-white text-black">
-      <img
-        src={coverImage}
-        alt={category}
-        className={`w-full object-cover h-44 ${
-          isLarge ? "md:h-96" : "md:h-56"
-        }`}
-      />
+      {loading ? (
+        <div
+          className={`w-full bg-gray-200 animate-pulse h-44 ${
+            isLarge ? "md:h-96" : "md:h-56"
+          }`}
+        />
+      ) : (
+        <img
+          src={coverImage}
+          alt={category}
+          className={`w-full object-cover h-44 ${
+            isLarge ? "md:h-96" : "md:h-56"
+          }`}
+        />
+      )}
 
       <div className="flex flex-1 flex-col justify-between gap-3 p-3.5 sm:gap-6 sm:p-6">
         <div className="flex flex-col gap-2 sm:gap-4">
@@ -46,7 +77,7 @@ export default function CategoryCard({
             </p>
           </div>
 
-          {tags.length > 0 && (
+          {!loading && tags.length > 0 && (
             <ul className="flex flex-wrap gap-1 sm:gap-2">
               {tags.map((recipe) => (
                 <li key={recipe.id}>

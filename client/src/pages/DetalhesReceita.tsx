@@ -1,15 +1,61 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
 import { Check, Square } from "lucide-react";
 import Container from "../layout/Container";
-import { mockRecipes } from "../mocks/recipesMock";
+import api from "../services/api";
+import type { Recipe } from "../types/recipe";
 
 export default function DetalhesReceita() {
   const { id } = useParams<{ id: string }>();
-  const recipe = mockRecipes.find((item) => item.id === id);
+
+  const [recipe, setRecipe] = useState<Recipe | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const [checkedIngredients, setCheckedIngredients] = useState<string[]>([]);
   const [checkedSteps, setCheckedSteps] = useState<number[]>([]);
+
+  useEffect(() => {
+    async function fetchRecipe() {
+      if (!id) return;
+
+      try {
+        setLoading(true);
+        const response = await api.get<Recipe>(`/recipes/${id}`);
+        setRecipe(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar detalhes da receita:", error);
+        setRecipe(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchRecipe();
+  }, [id]);
+
+  const toggleIngredient = (ingredientId: string) => {
+    setCheckedIngredients((prev) =>
+      prev.includes(ingredientId)
+        ? prev.filter((item) => item !== ingredientId)
+        : [...prev, ingredientId]
+    );
+  };
+
+  const toggleStep = (stepIndex: number) => {
+    setCheckedSteps((prev) =>
+      prev.includes(stepIndex)
+        ? prev.filter((item) => item !== stepIndex)
+        : [...prev, stepIndex]
+    );
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-20 text-center text-black font-spectral">
+        Carregando detalhes da receita...
+      </div>
+    );
+  }
 
   if (!recipe) {
     return (
@@ -28,22 +74,6 @@ export default function DetalhesReceita() {
       </div>
     );
   }
-
-  const toggleIngredient = (ingredientId: string) => {
-    setCheckedIngredients((prev) =>
-      prev.includes(ingredientId)
-        ? prev.filter((item) => item !== ingredientId)
-        : [...prev, ingredientId],
-    );
-  };
-
-  const toggleStep = (stepIndex: number) => {
-    setCheckedSteps((prev) =>
-      prev.includes(stepIndex)
-        ? prev.filter((item) => item !== stepIndex)
-        : [...prev, stepIndex],
-    );
-  };
 
   return (
     <main className="py-6 sm:py-8 text-black">

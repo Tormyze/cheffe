@@ -2,9 +2,30 @@ import Container from "../../../layout/Container";
 import Button from "../../../components/Button";
 import RecipeCard from "../../../components/RecipeCard";
 import { Link } from "react-router";
-import { mockRecipes } from "../../../mocks/recipesMock";
+
+import { useEffect, useState } from "react";
+import api from "../../../services/api";
+import type { Recipe } from "../../../types/recipe";
 
 export default function Featured() {
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadFeaturedRecipes() {
+      try {
+        const response = await api.get<Recipe[]>("/recipes");
+        setRecipes(response.data);
+      } catch (error) {
+        console.error("Erro ao carregar receitas em destaque:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadFeaturedRecipes();
+  }, []);
+
   return (
     <section id="featured" className="text-black py-6 sm:py-20 lg:py-28">
       <Container className="space-y-6 sm:space-y-12">
@@ -24,11 +45,18 @@ export default function Featured() {
             </Link>
           </div>
         </article>
-        <article className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6">
-          {mockRecipes.slice(0, 8).map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} className="hover:cursor-pointer" />
-          ))}
-        </article>
+
+        {loading ? (
+          <div className="py-12 text-center font-spectral text-black/60">
+            Carregando destaques...
+          </div>
+        ) : (
+          <article className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6">
+            {recipes.slice(0, 8).map((recipe) => (
+              <RecipeCard key={recipe.id} recipe={recipe} className="hover:cursor-pointer" />
+            ))}
+          </article>
+        )}
       </Container>
     </section>
   );

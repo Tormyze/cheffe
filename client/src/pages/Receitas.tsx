@@ -3,10 +3,13 @@ import { useSearchParams, useLocation } from "react-router";
 import Container from "../layout/Container";
 import RecipeCard from "../components/RecipeCard";
 import { Search } from "lucide-react";
-import { mockRecipes } from "../mocks/recipesMock";
-import { CATEGORIES } from "../types/recipe";
+import api from "../services/api";
+import { CATEGORIES, type Recipe } from "../types/recipe";
 
 export default function Receitas() {
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -16,6 +19,22 @@ export default function Receitas() {
   // categoria passada na URL (se houver)
   const selectedCategory = searchParams.get("categoria");
 
+  // chama a API com axios
+  useEffect(() => {
+    async function fetchRecipes() {
+      try {
+        setLoading(true);
+        const response = await api.get<Recipe[]>("/recipes");
+        setRecipes(response.data);
+      } catch (error) {
+        console.error("Erro ao carregar receitas:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchRecipes();
+  }, []);
+
   // foca o mouse na barra de pesquisa se a rota for acessada com o estado autoFocusSearch
   useEffect(() => {
     if (location.state?.autoFocusSearch && searchInputRef.current) {
@@ -23,7 +42,7 @@ export default function Receitas() {
     }
   }, [location.state]);
 
-  const filteredRecipes = mockRecipes.filter((recipe) => {
+  const filteredRecipes = recipes.filter((recipe) => {
     const matchesSearch = recipe.title
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -93,7 +112,11 @@ export default function Receitas() {
         </header>
 
         {/* Receitas */}
-        {filteredRecipes.length > 0 ? (
+        {loading ? (
+          <div className="py-12 text-center font-spectral text-black/60">
+            Carregando receitas...
+          </div>
+        ) : filteredRecipes.length > 0 ? (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 sm:gap-8">
             {filteredRecipes.map((recipe) => (
               <RecipeCard
