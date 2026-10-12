@@ -1,20 +1,30 @@
-import type { Request, Response } from "express";
+import type { Request, Response } from 'express';
 import * as recipeService from '../services/recipeService.js';
 
-export const getRecipes = (req: Request, res: Response) => {
-  const recipes = recipeService.getAllRecipes();
-  return res.status(200).json(recipes);
+export const getRecipes = async (req: Request, res: Response) => {
+  try {
+    const recipes = await recipeService.getAllRecipes();
+    return res.status(200).json(recipes);
+  } catch (error) {
+    console.error('Erro ao buscar receitas:', error);
+    return res.status(500).json({ message: 'Erro interno no servidor' });
+  }
 };
 
-export const getRecipeById = (req: Request<{ id: string }>, res: Response) => {
-  const { id } = req.params;
-  const recipe = recipeService.getRecipeById(id);
+export const getRecipeById = async (req: Request<{ id: string }>, res: Response) => {
+  try {
+    const { id } = req.params;
+    const recipe = await recipeService.getRecipeById(id);
 
-  if (!recipe) {
-    return res.status(404).json({ message: 'Receita não encontrada' });
+    if (!recipe) {
+      return res.status(404).json({ message: 'Receita não encontrada' });
+    }
+
+    return res.status(200).json(recipe);
+  } catch (error) {
+    console.error('Erro ao buscar receita por id:', error);
+    return res.status(500).json({ message: 'Erro interno no servidor' });
   }
-
-  return res.status(200).json(recipe);
 };
 
 // recipeController.ts - arquivo do controller da API
