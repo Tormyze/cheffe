@@ -1,4 +1,4 @@
-import { prisma } from '../database/prisma.js';
+import { prisma } from '../database/prisma';
 
 // helper para padronizar o retorno para a interface do Front-end
 const formatRecipe = (recipe: any) => ({
