@@ -1,10 +1,17 @@
-import { Router } from 'express';
-import { getRecipeById, getRecipes } from '../controller/recipeController';
+import { Router } from "express";
+import {
+  checkHealth,
+  getRecipeById,
+  getRecipes,
+} from "../controller/recipeController";
 
 const router = Router();
 
-router.get('/recipes', getRecipes);
-router.get('/recipes/:id', getRecipeById);
+router.get("/recipes", getRecipes);
+router.get("/recipes/:id", getRecipeById);
+
+// monitoramento e keep-alive
+router.get("/health", checkHealth);
 
 export default router;
 

@@ -23,10 +23,10 @@ export default function CategoryCard({
       try {
         setLoading(true);
         const response = await api.get<Recipe[]>("/recipes");
-        
+
         // Filtra localmente apenas as receitas pertencentes a esta categoria
         const filtered = response.data.filter(
-          (r) => r.category.toLowerCase() === category.toLowerCase()
+          (r) => r.category.toLowerCase() === category.toLowerCase(),
         );
         setCategoryRecipes(filtered);
       } catch (error) {
@@ -52,10 +52,16 @@ export default function CategoryCard({
     <article className="flex flex-col w-full overflow-hidden rounded-2xl bg-white text-black">
       {loading ? (
         <div
-          className={`w-full bg-gray-200 animate-pulse h-44 ${
+          className={`w-full bg-gray-200 animate-pulse flex flex-col items-center justify-center gap-2 h-44 ${
             isLarge ? "md:h-96" : "md:h-56"
           }`}
-        />
+        >
+          {/* spinner minimalista */}
+          <div className="w-8 h-8 border-3 border-gray-300 border-t-amber-500 rounded-full animate-spin" />
+          <span className="text-xs text-gray-500 font-medium">
+            Carregando...
+          </span>
+        </div>
       ) : (
         <img
           src={coverImage}
