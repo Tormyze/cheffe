@@ -3,5 +3,6 @@ import instagram from "./instagram.svg";
 import x from "./x.svg";
 import linkedin from "./linkedin.svg";
 import youtube from "./youtube.svg";
+import google from "./google.svg";
 
-export { facebook, instagram, x, linkedin, youtube };
+export { facebook, instagram, x, linkedin, youtube, google };

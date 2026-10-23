@@ -7,6 +7,7 @@ import App from "./App.tsx";
 import Home from "./pages/Home/index.tsx";
 import Receitas from "./pages/Receitas.tsx";
 import DetalhesReceita from "./pages/DetalhesReceita.tsx";
+import { Login } from "./pages/Login.tsx";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "receitas/:id",
         element: <DetalhesReceita />,
+      },
+      {
+        path: "login",
+        element: <Login />,
       }
     ],
   },
