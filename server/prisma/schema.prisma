@@ -8,6 +8,17 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  recipes   Recipe[]
+}
+
 model Recipe {
   id          String             @id @default(uuid())
   title       String
@@ -17,6 +28,9 @@ model Recipe {
   steps       String[]
   ingredients RecipeIngredient[]
   createdAt   DateTime           @default(now())
+
+  userId      String?
+  user        User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
 }
 
 model Ingredient {
