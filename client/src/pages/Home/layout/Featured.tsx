@@ -39,7 +39,7 @@ export default function Featured() {
           </div>
           <div>
             <Link to="/receitas">
-              <Button className="text-xs border border-black-20 hover:opacity-90 sm:text-sm">
+              <Button className="text-xs border border-black/20 hover:opacity-90 sm:text-sm">
                 Ver todas
               </Button>
             </Link>

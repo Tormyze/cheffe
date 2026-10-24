@@ -7,7 +7,8 @@ import App from "./App.tsx";
 import Home from "./pages/Home/index.tsx";
 import Receitas from "./pages/Receitas.tsx";
 import DetalhesReceita from "./pages/DetalhesReceita.tsx";
-import { Login } from "./pages/Login.tsx";
+import Login from "./pages/Login.tsx";
+import Cadastro from "./pages/Cadastro.tsx";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: <Login />,
+      },
+      {
+        path: "cadastro",
+        element: <Cadastro />,
       }
     ],
   },

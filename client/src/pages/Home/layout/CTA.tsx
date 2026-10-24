@@ -25,7 +25,7 @@ export default function CTA() {
                 </Button>
               </Link>
               <Link to="#featured">
-                <Button className="text-xs font-spectral border border-black-20 text-black hover:opacity-90 sm:text-sm">
+                <Button className="text-xs font-spectral border border-black/20 text-black hover:opacity-90 sm:text-sm">
                   Explorar
                 </Button>
               </Link>

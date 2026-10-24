@@ -85,7 +85,7 @@ export default function Receitas() {
               placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full rounded-xl border border-black-20 bg-transparent py-3 pl-11 pr-4 font-spectral text-base text-black placeholder:text-black/60 focus:border-black focus:outline-none"
+              className="w-full rounded-xl border border-black/20 bg-transparent py-3 pl-11 pr-4 font-spectral text-base text-black placeholder:text-black/60 focus:border-black focus:outline-none"
             />
           </div>
 

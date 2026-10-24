@@ -28,7 +28,7 @@ export default function About() {
 
             <div className="flex flex-wrap items-center gap-4 sm:gap-6">
               <Link to="#featured">
-                <Button className="text-xs font-spectral border-2 border-black-20 hover:opacity-90 sm:text-sm">
+                <Button className="text-xs font-spectral border-2 border-black/20 hover:opacity-90 sm:text-sm">
                   Explorar
                 </Button>
               </Link>
