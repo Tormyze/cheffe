@@ -7,8 +7,8 @@ import {
 
 const router = Router();
 
-router.get("/recipes", getRecipes);
-router.get("/recipes/:id", getRecipeById);
+router.get("/", getRecipes);
+router.get("/:id", getRecipeById);
 
 // monitoramento e keep-alive
 router.get("/health", checkHealth);

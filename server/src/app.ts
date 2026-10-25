@@ -1,7 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import routes from "./routes/recipeRoutes";
+import recipeRoutes from "./routes/recipeRoutes";
+import authRoutes from "./routes/authRoutes";
 
 dotenv.config();
 
@@ -12,7 +13,8 @@ app.use(cors());
 const PORT = process.env.PORT || 3001;
 
 // todas as rotas da API serão prefixadas com /api
-app.use('/api', routes);
+app.use('/api/recipes', recipeRoutes);
+app.use("/api/auth", authRoutes);
 
 // inicia o servidor apenas se não estiver em ambiente de teste
 if (process.env.NODE_ENV !== 'test') {
