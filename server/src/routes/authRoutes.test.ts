@@ -104,3 +104,61 @@ describe("POST /api/auth/login", () => {
     expect(response.body.error).toBe("E-mail e senha são obrigatórios.");
   });
 });
+
+describe("GET /api/auth/me", () => {
+  let token: string;
+
+  beforeAll(async () => {
+    await request(app).post("/api/auth/register").send({
+      name: "Usuario Perfil",
+      email: "mejest@cheffe.com",
+      password: "senha123",
+    });
+
+    const response = await request(app)
+      .post("/api/auth/login")
+      .send({
+        email: "mejest@cheffe.com",
+        password: "senha123",
+      });
+
+    token = response.body.token;
+  });
+
+  afterAll(async () => {
+    await prisma.user.deleteMany({ where: { email: "mejest@cheffe.com" } });
+  });
+
+  it("deve retornar o perfil do usuário autenticado", async () => {
+    const response = await request(app)
+      .get("/api/auth/me")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(200);
+
+    expect(response.body.user).toMatchObject({
+      name: "Usuario Perfil",
+      email: "mejest@cheffe.com",
+    });
+    expect(response.body.user).toHaveProperty("id");
+    expect(response.body.user).toHaveProperty("createdAt");
+    expect(response.body.user).toHaveProperty("recipes");
+    expect(response.body.user).not.toHaveProperty("password");
+  });
+
+  it("deve retornar erro 401 quando o token não for informado", async () => {
+    const response = await request(app)
+      .get("/api/auth/me")
+      .expect(401);
+
+    expect(response.body.error).toBe("Acesso negado. Token não fornecido.");
+  });
+
+  it("deve retornar erro 403 quando o token for inválido", async () => {
+    const response = await request(app)
+      .get("/api/auth/me")
+      .set("Authorization", "Bearer token-invalido")
+      .expect(403);
+
+    expect(response.body.error).toBe("Token inválido ou expirado.");
+  });
+});
