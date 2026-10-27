@@ -21,3 +21,19 @@ export const register = async (req: Request, res: Response) => {
     return res.status(statusCode).json({ error: error.message || "Erro interno do servidor." });
   }
 };
+
+export const login = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "E-mail e senha são obrigatórios." });
+    }
+
+    const result = await authService.loginUser(email, password);
+    return res.status(200).json({ message: "Login realizado com sucesso!", ...result });
+  } catch (error: any) {
+    const statusCode = error.statusCode || 500;
+    return res.status(statusCode).json({ error: error.message || "Erro interno do servidor." });
+  }
+};
