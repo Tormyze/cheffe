@@ -4,24 +4,43 @@ import Container from "../layout/Container";
 import { Input } from "../components/Input";
 import Button from "../components/Button";
 import googleIcon from "../assets/icons/google.svg";
+import axios from "axios";
+import { loginUser } from "../services/recipeService";
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setError("");
 
-    // TODO: Conectar com o endpoint de autenticação (JWT) via Axios
-    console.log("Dados de Login:", { email, password });
+    try {
+      setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
+      const data = await loginUser({ email, password });
+
+      // salva o token e dados do usuário no localStorage
+      localStorage.setItem("@cheffe:token", data.token);
+      localStorage.setItem("@cheffe:user", JSON.stringify(data.user));
+
       navigate("/");
-    }, 1000);
+    } catch (err) {
+      console.error("Erro no login:", err);
+
+      let message = "Credenciais inválidas ou erro no servidor.";
+
+      if (axios.isAxiosError(err)) {
+        message = err.response?.data?.message || message;
+      }
+
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,6 +58,13 @@ export const Login: React.FC = () => {
               Entre com seus dados para acessar sua conta.
             </p>
           </div>
+
+          {/* Feedback de erro */}
+          {error && (
+            <div className="w-full p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm font-spectral text-left">
+              {error}
+            </div>
+          )}
 
           {/* Formulário */}
           <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5 sm:gap-6">

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
 import { Check, Square } from "lucide-react";
 import Container from "../layout/Container";
-import api from "../services/api";
+import { getRecipeById } from "../services/recipeService";
 import type { Recipe } from "../types/recipe";
 
 export default function DetalhesReceita() {
@@ -20,8 +20,8 @@ export default function DetalhesReceita() {
 
       try {
         setLoading(true);
-        const response = await api.get<Recipe>(`/recipes/${id}`);
-        setRecipe(response.data);
+        const data = await getRecipeById(id);
+        setRecipe(data);
       } catch (error) {
         console.error("Erro ao buscar detalhes da receita:", error);
         setRecipe(null);

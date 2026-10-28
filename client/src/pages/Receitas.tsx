@@ -3,7 +3,7 @@ import { useSearchParams, useLocation } from "react-router";
 import Container from "../layout/Container";
 import RecipeCard from "../components/RecipeCard";
 import { Search } from "lucide-react";
-import api from "../services/api";
+import { getRecipes } from "../services/recipeService";
 import { CATEGORIES, type Recipe } from "../types/recipe";
 
 export default function Receitas() {
@@ -24,8 +24,8 @@ export default function Receitas() {
     async function fetchRecipes() {
       try {
         setLoading(true);
-        const response = await api.get<Recipe[]>("/recipes");
-        setRecipes(response.data);
+        const data = await getRecipes();
+        setRecipes(data);
       } catch (error) {
         console.error("Erro ao carregar receitas:", error);
       } finally {

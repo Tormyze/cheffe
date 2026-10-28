@@ -4,6 +4,8 @@ import Container from "../layout/Container";
 import { Input } from "../components/Input";
 import Button from "../components/Button";
 import googleIcon from "../assets/icons/google.svg";
+import axios from "axios";
+import { registerUser } from "../services/recipeService";
 
 export const Cadastro: React.FC = () => {
   const [name, setName] = useState("");
@@ -14,7 +16,7 @@ export const Cadastro: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -29,15 +31,26 @@ export const Cadastro: React.FC = () => {
       return;
     }
 
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    // TODO: Conectar com o endpoint de registro (bcrypt + Prisma) via Axios
-    console.log("Dados de Cadastro:", { name, email, password });
+      await registerUser({
+        name,
+        email,
+        password,
+      });
 
-    setTimeout(() => {
-      setLoading(false);
       navigate("/login");
-    }, 1000);
+    } catch (err) {
+      console.error("Erro no cadastro:", err);
+      let message = "Erro ao realizar cadastro. Tente novamente.";
+      if (axios.isAxiosError(err)) {
+        message = err.response?.data?.message || message;
+      }
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,14 +58,14 @@ export const Cadastro: React.FC = () => {
       <Container className="flex justify-center items-center w-full">
         {/* Card Principal de Cadastro */}
         <div className="w-full max-w-140 p-5 sm:p-8 md:p-12 bg-white rounded-2xl shadow border flex flex-col items-center gap-6 sm:gap-8 text-center">
-          
           {/* Cabeçalho do Card */}
           <div className="w-full flex flex-col items-center gap-2 sm:gap-4">
             <h1 className="w-full text-center text-zest text-3xl sm:text-4xl md:text-5xl font-medium leading-tight">
               Criar conta
             </h1>
             <p className="w-full text-center text-gray-700 text-sm sm:text-base md:text-lg font-spectral leading-relaxed">
-              Crie sua conta para salvar suas receitas favoritas e compartilhar suas criações.
+              Crie sua conta para salvar suas receitas favoritas e compartilhar
+              suas criações.
             </p>
           </div>
 
@@ -64,7 +77,10 @@ export const Cadastro: React.FC = () => {
           )}
 
           {/* Formulário */}
-          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5 sm:gap-6">
+          <form
+            onSubmit={handleSubmit}
+            className="w-full flex flex-col gap-5 sm:gap-6"
+          >
             <div className="w-full flex flex-col gap-4 sm:gap-5 text-left">
               <Input
                 label="Nome completo"
@@ -144,7 +160,6 @@ export const Cadastro: React.FC = () => {
               </div>
             </div>
           </form>
-
         </div>
       </Container>
     </section>
