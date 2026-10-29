@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router";
-import { Heart, ChefHat, Plus, Edit2, Pencil, Trash2 } from "lucide-react";
+import { Link, useNavigate } from "react-router";
+import { Heart, ChefHat, Plus, Edit2, Pencil, Trash2, LogOut } from "lucide-react";
 import Container from "../layout/Container";
 import RecipeCard from "../components/RecipeCard";
 import Button from "../components/Button";
@@ -9,7 +9,8 @@ import { getRecipes } from "../services/recipeService";
 import type { Recipe } from "../types/recipe";
 
 export const Perfil: React.FC = () => {
-  const { user } = useAuth();
+const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
   const [myRecipes, setMyRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,6 +34,11 @@ export const Perfil: React.FC = () => {
     loadProfileData();
   }, []);
 
+  const handleSignOut = () => {
+    signOut();
+    navigate("/");
+  };
+
   return (
     <section className="py-8 sm:py-12 md:py-16 text-black">
       <Container>
@@ -40,7 +46,7 @@ export const Perfil: React.FC = () => {
           
           {/* Card de Informações do Usuário (Sidebar no Desktop) */}
           <aside className="w-full lg:w-80 shrink-0 bg-white p-6 rounded-2xl border border-black/10 flex flex-col items-center gap-6 text-center shadow-xs">
-            <div className="flex flex-col items-center gap-4 w-full">
+            <article className="flex flex-col items-center gap-4 w-full">
               <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-2 border-zest/30 shadow-inner">
                 <img
                   src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=300"
@@ -51,26 +57,38 @@ export const Perfil: React.FC = () => {
 
               <div className="flex flex-col items-center gap-1 w-full">
                 <h1 className="font-aleo text-2xl sm:text-3xl font-medium text-zest">
-                  {user?.name || "Usuário Cheffe"}
+                  {user?.name || "Novo Cheffe"}
                 </h1>
                 <span className="font-spectral text-sm text-gray-500">
                   @{user?.name?.toLowerCase().replace(/\s+/g, "") || "cheffe_user"}
                 </span>
               </div>
-            </div>
+            </article>
 
             <p className="font-spectral text-sm text-gray-700 leading-relaxed">
-              Paixão por gastronomia. Testando e criando novas receitas!
+              Testando e criando novas receitas!
             </p>
 
-            <button
-              type="button"
-              onClick={() => alert("Edição de perfil em breve!")}
-              className="w-full py-2.5 px-4 rounded-xl border border-zest text-zest font-spectral font-medium text-sm flex items-center justify-center gap-2 hover:bg-zest/5 transition-colors cursor-pointer"
-            >
-              <Edit2 className="w-4 h-4 stroke-2" />
-              <span>Editar perfil</span>
-            </button>
+            {/* Grupo de Ações do Usuário */}
+            <div className="flex flex-col gap-3 w-full">
+              <button
+                type="button"
+                onClick={() => alert("Edição de perfil em breve!")}
+                className="w-full py-2.5 px-4 rounded-xl border border-zest text-zest font-spectral font-medium text-sm flex items-center justify-center gap-2 hover:bg-zest/5 transition-colors cursor-pointer"
+              >
+                <Edit2 className="w-4 h-4 stroke-2" />
+                <span>Editar perfil</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="w-full py-2.5 px-4 rounded-xl border border-red-500 text-red-600 font-spectral font-medium text-sm flex items-center justify-center gap-2 hover:bg-red-50 transition-colors cursor-pointer"
+              >
+                <LogOut className="w-4 h-4 stroke-2" />
+                <span>Sair da conta</span>
+              </button>
+            </div>
           </aside>
 
           {/* Centro: Receitas Favoritas + Minhas Receitas */}
