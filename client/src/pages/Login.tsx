@@ -5,13 +5,15 @@ import { Input } from "../components/Input";
 import Button from "../components/Button";
 import googleIcon from "../assets/icons/google.svg";
 import axios from "axios";
-import { loginUser } from "../services/recipeService";
+import { useAuth } from "../hooks/useAuth";
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const { signIn } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,11 +23,7 @@ export const Login: React.FC = () => {
     try {
       setLoading(true);
 
-      const data = await loginUser({ email, password });
-
-      // salva o token e dados do usuário no localStorage
-      localStorage.setItem("@cheffe:token", data.token);
-      localStorage.setItem("@cheffe:user", JSON.stringify(data.user));
+      await signIn({ email, password });
 
       navigate("/");
     } catch (err) {
@@ -48,7 +46,6 @@ export const Login: React.FC = () => {
       <Container className="flex justify-center items-center w-full">
         {/* Card Principal de Login */}
         <div className="w-full max-w-140 p-5 sm:p-8 md:p-12 bg-white rounded-2xl shadow border flex flex-col items-center gap-6 sm:gap-8 text-center">
-          
           {/* Cabeçalho do Card */}
           <div className="w-full flex flex-col items-center gap-2 sm:gap-4">
             <h1 className="w-full text-center text-zest text-3xl sm:text-4xl md:text-5xl font-medium leading-tight">
@@ -67,7 +64,10 @@ export const Login: React.FC = () => {
           )}
 
           {/* Formulário */}
-          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5 sm:gap-6">
+          <form
+            onSubmit={handleSubmit}
+            className="w-full flex flex-col gap-5 sm:gap-6"
+          >
             <div className="w-full flex flex-col gap-4 sm:gap-5 text-left">
               <Input
                 label="Email"
@@ -129,7 +129,6 @@ export const Login: React.FC = () => {
               </div>
             </div>
           </form>
-
         </div>
       </Container>
     </section>
