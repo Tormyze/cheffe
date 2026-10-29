@@ -11,6 +11,7 @@ import DetalhesReceita from "./pages/DetalhesReceita.tsx";
 import Login from "./pages/Login.tsx";
 import Cadastro from "./pages/Cadastro.tsx";
 import Perfil from "./pages/Perfil.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 const router = createBrowserRouter([
   {
@@ -37,10 +38,18 @@ const router = createBrowserRouter([
         path: "cadastro",
         element: <Cadastro />,
       },
+
+      // Protected Routes (Rotas Protegidas) //
       {
-        path: "perfil",
-        element: <Perfil />,
-      }
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "perfil",
+            element: <Perfil />,
+          },
+        ],
+      },
+      // Protected Routes (Rotas Protegidas) //
     ],
   },
 ]);
