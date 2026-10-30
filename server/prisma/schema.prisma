@@ -17,6 +17,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   recipes   Recipe[]
+  favorites Favorite[]
 }
 
 model Recipe {
@@ -31,6 +32,7 @@ model Recipe {
 
   userId      String?
   user        User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  favorites Favorite[]
 }
 
 model Ingredient {
@@ -50,4 +52,16 @@ model RecipeIngredient {
   ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
 
   @@unique([recipeId, ingredientId])
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  recipeId  String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, recipeId]) // evita favoritos duplicados no banco
 }
