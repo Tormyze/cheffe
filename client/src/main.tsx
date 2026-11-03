@@ -4,6 +4,7 @@ import "./index.css";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { AuthProvider } from "./contexts/AuthContext.tsx";
+import { FavoritesProvider } from "./contexts/favoritesContext.tsx";
 import App from "./App.tsx";
 import Home from "./pages/Home/index.tsx";
 import Receitas from "./pages/Receitas.tsx";
@@ -57,7 +58,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <FavoritesProvider>
+        <RouterProvider router={router} />
+      </FavoritesProvider>
     </AuthProvider>
   </StrictMode>,
 );
