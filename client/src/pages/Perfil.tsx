@@ -5,13 +5,14 @@ import Container from "../layout/Container";
 import RecipeCard from "../components/RecipeCard";
 import Button from "../components/Button";
 import { useAuth } from "../hooks/useAuth";
+import { useFavorites } from "../hooks/useFavorites";
 import { getRecipes } from "../services/recipeService";
 import type { Recipe } from "../types/recipe";
 
 export const Perfil: React.FC = () => {
-const { user, signOut } = useAuth();
+  const { user, signOut } = useAuth();
+  const { favoriteRecipes, loadingFavorites } = useFavorites();
   const navigate = useNavigate();
-  const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
   const [myRecipes, setMyRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,8 +22,7 @@ const { user, signOut } = useAuth();
         setLoading(true);
         const allRecipes = await getRecipes();
 
-        // para apresentação inicial no perfil:
-        setFavoriteRecipes(allRecipes.slice(0, 3));
+        // para apresentação inicial das minhas receitas:
         setMyRecipes(allRecipes.slice(0, 3));
       } catch (error) {
         console.error("Erro ao carregar dados do perfil:", error);
@@ -108,7 +108,7 @@ const { user, signOut } = useAuth();
                 </p>
               </div>
 
-              {loading ? (
+              {loadingFavorites ? (
                 <div className="py-8 font-spectral text-gray-500">Carregando favoritos...</div>
               ) : favoriteRecipes.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
