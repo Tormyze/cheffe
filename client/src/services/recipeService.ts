@@ -1,5 +1,5 @@
 import api from "./api";
-import type { Recipe } from "../types/recipe";
+import type { Category, Ingredient, Recipe } from "../types/recipe";
 
 export interface RegisterPayload {
   name: string;
@@ -11,6 +11,15 @@ export interface LoginPayload {
   email: string;
   password: string;
 } // tipagem do payload de login
+
+export interface CreateRecipePayload {
+  title: string;
+  imgUrl: string;
+  category: Category;
+  prepTime: number;
+  ingredients: Omit<Ingredient, "id">[];
+  steps: string[];
+}
 
 export interface AuthResponse {
   token: string;
@@ -38,5 +47,10 @@ export const registerUser = async (data: RegisterPayload): Promise<AuthResponse>
 
 export const loginUser = async (data: LoginPayload): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>("/auth/login", data);
+  return response.data;
+};
+
+export const createRecipe = async (data: CreateRecipePayload): Promise<Recipe> => {
+  const response = await api.post<Recipe>("/recipes", data);
   return response.data;
 };
