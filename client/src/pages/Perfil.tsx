@@ -48,11 +48,16 @@ export const Perfil: React.FC = () => {
           <aside className="w-full lg:w-80 shrink-0 bg-white p-6 rounded-2xl border border-black/10 flex flex-col items-center gap-6 text-center shadow-xs">
             <article className="flex flex-col items-center gap-4 w-full">
               <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-2 border-zest/30 shadow-inner">
-                <img
-                  src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&q=80&w=300"
-                  alt={user?.name || "Foto de perfil"}
-                  className="w-full h-full object-cover"
-                />
+                <div
+                  role="img"
+                  aria-label={user?.name || "Foto de perfil"}
+                  className="flex h-full w-full items-center justify-center bg-orange-50 text-zest"
+                >
+                  <ChefHat
+                    className="h-16 w-16 stroke-[1.5] sm:h-20 sm:w-20"
+                    aria-hidden="true"
+                  />
+                </div>
               </div>
 
               <div className="flex flex-col items-center gap-1 w-full">
@@ -155,7 +160,7 @@ export const Perfil: React.FC = () => {
                       <RecipeCard recipe={recipe} />
                       
                       {/* Ações de Edição/Exclusão para receitas do próprio usuário */}
-                      <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-white/90 backdrop-blur-xs p-1.5 rounded-xl shadow-xs border border-black/10">
+                      <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-white/90 backdrop-blur-xs p-1.5 rounded-xl shadow-xs border border-black/10">
                         <button
                           type="button"
                           title="Editar receita"

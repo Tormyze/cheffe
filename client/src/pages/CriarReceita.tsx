@@ -1,4 +1,9 @@
-import { useState, type FormEvent } from "react";
+import {
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+  type InvalidEvent,
+} from "react";
 import { Link, useNavigate } from "react-router";
 import { ChevronDown, Image as ImageIcon, Trash2 } from "lucide-react";
 import { createRecipe } from "../services/recipeService";
@@ -15,6 +20,9 @@ const emptyIngredient = (): IngredientForm => ({
   quantity: "",
   unit: "",
 });
+
+const requiredFieldMessage =
+  "Este campo é obrigatório para criar a receita.";
 
 export default function CriarReceita() {
   const navigate = useNavigate();
@@ -33,6 +41,22 @@ export default function CriarReceita() {
   const [imageError, setImageError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+
+  const handleRequiredInvalid = (
+    event: InvalidEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+  ) => {
+    if (event.currentTarget.validity.valueMissing) {
+      event.currentTarget.setCustomValidity(requiredFieldMessage);
+    }
+  };
+
+  const clearRequiredInvalid = (
+    event: ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
+    event.currentTarget.setCustomValidity("");
+  };
 
   const addIngredient = () => {
     setIngredients((current) => [...current, emptyIngredient()]);
@@ -128,7 +152,11 @@ export default function CriarReceita() {
                 <input
                   required
                   value={title}
-                  onChange={(event) => setTitle(event.target.value)}
+                  onInvalid={handleRequiredInvalid}
+                  onChange={(event) => {
+                    clearRequiredInvalid(event);
+                    setTitle(event.target.value);
+                  }}
                   placeholder="Ex: Bolo de Cenoura com Cobertura de Chocolate"
                   className="mt-2 w-full rounded-xl border border-stone-300 px-3 py-2.5 font-spectral text-sm outline-none transition focus:border-zest focus:ring-1 focus:ring-zest"
                 />
@@ -166,7 +194,11 @@ export default function CriarReceita() {
                       min="1"
                       type="number"
                       value={prepTime}
-                      onChange={(event) => setPrepTime(event.target.value)}
+                      onInvalid={handleRequiredInvalid}
+                      onChange={(event) => {
+                        clearRequiredInvalid(event);
+                        setPrepTime(event.target.value);
+                      }}
                       className="w-full rounded-xl px-3 py-2.5 font-spectral text-sm outline-none"
                     />
                     <span className="pr-3 font-spectral text-xs text-stone-500">
@@ -181,10 +213,13 @@ export default function CriarReceita() {
                 <div className="mt-2 flex flex-col items-start gap-4 sm:flex-row sm:items-start">
                   <div className="min-w-0 flex-1">
                     <input
+                      required
                       id="recipe-image-url"
                       type="url"
                       value={imgUrl}
+                      onInvalid={handleRequiredInvalid}
                       onChange={(event) => {
+                        clearRequiredInvalid(event);
                         setImgUrl(event.target.value);
                         setImageError(false);
                       }}
@@ -247,9 +282,11 @@ export default function CriarReceita() {
                     required
                     aria-label={`Ingrediente ${index + 1}`}
                     value={ingredient.name}
-                    onChange={(event) =>
-                      updateIngredient(index, "name", event.target.value)
-                    }
+                    onInvalid={handleRequiredInvalid}
+                    onChange={(event) => {
+                      clearRequiredInvalid(event);
+                      updateIngredient(index, "name", event.target.value);
+                    }}
                     placeholder="Ingrediente"
                     className="rounded-xl border border-stone-300 px-3 py-2.5 font-spectral text-sm outline-none focus:border-zest focus:ring-1 focus:ring-zest"
                   />
@@ -257,9 +294,11 @@ export default function CriarReceita() {
                     required
                     aria-label={`Quantidade do ingrediente ${index + 1}`}
                     value={ingredient.quantity}
-                    onChange={(event) =>
-                      updateIngredient(index, "quantity", event.target.value)
-                    }
+                    onInvalid={handleRequiredInvalid}
+                    onChange={(event) => {
+                      clearRequiredInvalid(event);
+                      updateIngredient(index, "quantity", event.target.value);
+                    }}
                     placeholder="2"
                     className="rounded-xl border border-stone-300 px-3 py-2.5 font-spectral text-sm outline-none focus:border-zest focus:ring-1 focus:ring-zest"
                   />
@@ -267,18 +306,22 @@ export default function CriarReceita() {
                     required
                     aria-label={`Unidade do ingrediente ${index + 1}`}
                     value={ingredient.unit}
-                    onChange={(event) =>
-                      updateIngredient(index, "unit", event.target.value)
-                    }
+                    onInvalid={handleRequiredInvalid}
+                    onChange={(event) => {
+                      clearRequiredInvalid(event);
+                      updateIngredient(index, "unit", event.target.value);
+                    }}
                     className="rounded-xl border border-stone-300 bg-white px-3 py-2.5 font-spectral text-sm outline-none focus:border-zest focus:ring-1 focus:ring-zest"
                   >
-                    <option value="">Unidade</option>
-                    <option value="xícara">xícara</option>
-                    <option value="xícaras">xícaras</option>
-                    <option value="colher de sopa">colher de sopa</option>
+                    <option value="">-</option>
+                    <option value="unidade(s)">unidade(s)</option>
+                    <option value="xícara(s)">xícara(s)</option>
+                    <option value="colher(es) de sopa">
+                      colher(es) de sopa
+                    </option>
+                    <option value="colher(es) de chá">colher(es) de chá</option>
                     <option value="g">g</option>
                     <option value="ml">ml</option>
-                    <option value="unidade">unidade</option>
                   </select>
                   <button
                     type="button"
@@ -315,7 +358,11 @@ export default function CriarReceita() {
                   <textarea
                     required
                     value={step}
-                    onChange={(event) => updateStep(index, event.target.value)}
+                    onInvalid={handleRequiredInvalid}
+                    onChange={(event) => {
+                      clearRequiredInvalid(event);
+                      updateStep(index, event.target.value);
+                    }}
                     placeholder="Descreva este passo..."
                     className="min-h-16 flex-1 resize-y rounded-xl border border-stone-300 px-3 py-2.5 font-spectral text-sm outline-none focus:border-zest focus:ring-1 focus:ring-zest"
                   />

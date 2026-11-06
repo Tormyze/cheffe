@@ -15,7 +15,7 @@ export default function RecipeCard({
 
   const prepTimeLabel =
     recipe.prepTime >= 60
-      ? `${recipe.prepTime / 60}h`
+      ? `${Math.floor(recipe.prepTime / 60)}h`
       : `${recipe.prepTime}min`;
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
@@ -43,13 +43,13 @@ export default function RecipeCard({
             type="button"
             onClick={handleFavoriteClick}
             className="absolute top-2 right-2 rounded-full bg-white/80 p-2 backdrop-blur-sm transition-transform hover:scale-110 hover:cursor-pointer active:scale-95 shadow-sm outline-none"
-            aria-label={fav ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+            aria-label={
+              fav ? "Remover dos favoritos" : "Adicionar aos favoritos"
+            }
           >
             <Heart
               className={`h-4 w-4 transition-colors sm:h-5 sm:w-5 ${
-                fav
-                  ? "fill-zest text-zest"
-                  : "text-black hover:text-zest"
+                fav ? "fill-zest text-zest" : "text-black hover:text-zest"
               }`}
             />
           </button>

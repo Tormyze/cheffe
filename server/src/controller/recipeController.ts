@@ -1,5 +1,7 @@
 import type { Request, Response } from "express";
 import * as recipeService from "../services/recipeService";
+import { AuthenticatedRequest } from "../middlewares/authMiddleware";
+import type { CreateRecipeInput } from "../types/recipe";
 
 export const getRecipes = async (req: Request, res: Response) => {
   try {
@@ -26,6 +28,64 @@ export const getRecipeById = async (
     return res.status(200).json(recipe);
   } catch (error) {
     console.error("Erro ao buscar receita por id:", error);
+    return res.status(500).json({ message: "Erro interno no servidor" });
+  }
+};
+
+export const postRecipe = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    const {
+      title,
+      imgUrl,
+      category,
+      prepTime,
+      ingredients,
+      steps,
+    }: CreateRecipeInput = req.body;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Usuário não autenticado." });
+    }
+
+    if (
+      !title ||
+      !imgUrl ||
+      !category ||
+      !Number.isFinite(prepTime) ||
+      !Array.isArray(ingredients) ||
+      !ingredients.length ||
+      !Array.isArray(steps) ||
+      !steps.length
+    ) {
+      return res.status(400).json({ error: "Dados da receita inválidos." });
+    }
+
+    if (
+      ingredients.some(
+        (ingredient) =>
+          !ingredient ||
+          typeof ingredient.name !== "string" ||
+          !ingredient.name.trim(),
+      )
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Dados dos ingredientes inválidos." });
+    }
+
+    const recipe = await recipeService.createRecipe(userId, {
+      title,
+      imgUrl,
+      category,
+      prepTime,
+      ingredients,
+      steps,
+    });
+
+    return res.status(201).json(recipe);
+  } catch (error) {
+    console.error("Erro ao criar receita:", error);
     return res.status(500).json({ message: "Erro interno no servidor" });
   }
 };

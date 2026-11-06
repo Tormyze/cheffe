@@ -21,7 +21,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
+    if (error.response && [401, 403].includes(error.response.status)) {
       localStorage.removeItem('@cheffe:token');
       localStorage.removeItem('@cheffe:user');
       

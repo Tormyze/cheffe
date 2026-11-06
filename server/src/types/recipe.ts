@@ -8,6 +8,15 @@ export interface Recipe {
   steps: string[];
 }
 
+export interface CreateRecipeInput {
+  title: string;
+  imgUrl: string;
+  category: Category;
+  prepTime: number;
+  ingredients: Omit<Ingredient, "id">[];
+  steps: string[];
+}
+
 export interface Ingredient {
   id: string;
   name: string;

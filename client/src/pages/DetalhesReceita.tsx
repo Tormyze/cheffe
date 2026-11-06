@@ -111,7 +111,7 @@ export default function DetalhesReceita() {
                   ingredient.description ||
                   `${ingredient.amount ? `${ingredient.amount} ` : ""}${
                     ingredient.unit ? `${ingredient.unit} de ` : ""
-                  }${ingredient.name}`;
+                  }${ingredient.name.toLowerCase()}`;
 
                 return (
                   <li key={ingredient.id}>
