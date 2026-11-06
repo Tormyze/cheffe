@@ -1,4 +1,5 @@
 import request from "supertest";
+import jwt from "jsonwebtoken";
 import app from "../app";
 import * as recipeService from "../services/recipeService";
 
@@ -17,6 +18,27 @@ describe("Recipe Routes & Controller (HTTP Integration)", () => {
       ingredients: [{ id: "ing1", name: "Farinha" }],
     },
   ];
+
+  const recipePayload = {
+    title: "Pastel de Frango",
+    imgUrl: "https://example.com/pastel.jpg",
+    category: "Massas",
+    prepTime: 40,
+    ingredients: [
+      {
+        name: "Farinha de trigo",
+        amount: 2,
+        unit: "xícara(s)",
+      },
+    ],
+    steps: ["Misture os ingredientes.", "Asse até dourar."],
+  };
+
+  const userId = "user-1";
+  const token = jwt.sign(
+    { id: userId, email: "teste@cheffe.com" },
+    process.env.JWT_SECRET || "default_secret",
+  );
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -75,6 +97,122 @@ describe("Recipe Routes & Controller (HTTP Integration)", () => {
       const response = await request(app).get("/api/recipes/999").expect(404);
 
       expect(response.body).toEqual({ message: "Receita não encontrada" });
+    });
+  });
+
+  describe("POST /api/recipes", () => {
+    it("deve criar uma receita para o usuário autenticado", async () => {
+      (recipeService.createRecipe as jest.Mock).mockResolvedValue({
+        id: "recipe-1",
+        ...recipePayload,
+      });
+
+      const response = await request(app)
+        .post("/api/recipes")
+        .set("Authorization", `Bearer ${token}`)
+        .send(recipePayload)
+        .expect(201);
+
+      expect(recipeService.createRecipe).toHaveBeenCalledWith(
+        userId,
+        recipePayload,
+      );
+      expect(response.body.id).toBe("recipe-1");
+    });
+
+    it("deve rejeitar a criação sem autenticação", async () => {
+      const response = await request(app)
+        .post("/api/recipes")
+        .send(recipePayload)
+        .expect(401);
+
+      expect(recipeService.createRecipe).not.toHaveBeenCalled();
+      expect(response.body).toEqual({
+        error: "Acesso negado. Token não fornecido.",
+      });
+    });
+
+    it("deve rejeitar a criação com dados inválidos", async () => {
+      const response = await request(app)
+        .post("/api/recipes")
+        .set("Authorization", `Bearer ${token}`)
+        .send({ ...recipePayload, ingredients: [] })
+        .expect(400);
+
+      expect(recipeService.createRecipe).not.toHaveBeenCalled();
+      expect(response.body).toEqual({
+        error: "Dados da receita inválidos.",
+      });
+    });
+  });
+
+  describe("PATCH /api/recipes/:id", () => {
+    it("deve editar uma receita do usuário autenticado", async () => {
+      (recipeService.updateRecipe as jest.Mock).mockResolvedValue({
+        id: "recipe-1",
+        ...recipePayload,
+        title: "Pastel de Frango Especial",
+      });
+
+      const updatedPayload = {
+        ...recipePayload,
+        title: "Pastel de Frango Especial",
+      };
+      const response = await request(app)
+        .patch("/api/recipes/recipe-1")
+        .set("Authorization", `Bearer ${token}`)
+        .send(updatedPayload)
+        .expect(200);
+
+      expect(recipeService.updateRecipe).toHaveBeenCalledWith(
+        "recipe-1",
+        userId,
+        updatedPayload,
+      );
+      expect(response.body.title).toBe("Pastel de Frango Especial");
+    });
+
+    it("deve retornar 404 quando a receita não pertencer ao usuário", async () => {
+      (recipeService.updateRecipe as jest.Mock).mockResolvedValue(null);
+
+      const response = await request(app)
+        .patch("/api/recipes/recipe-unknown")
+        .set("Authorization", `Bearer ${token}`)
+        .send(recipePayload)
+        .expect(404);
+
+      expect(response.body).toEqual({
+        message: "Receita não encontrada.",
+      });
+    });
+  });
+
+  describe("DELETE /api/recipes/:id", () => {
+    it("deve excluir uma receita do usuário autenticado", async () => {
+      (recipeService.deleteRecipe as jest.Mock).mockResolvedValue(true);
+
+      await request(app)
+        .delete("/api/recipes/recipe-1")
+        .set("Authorization", `Bearer ${token}`)
+        .expect(204);
+
+      expect(recipeService.deleteRecipe).toHaveBeenCalledWith(
+        "recipe-1",
+        userId,
+      );
+    });
+
+    it("deve retornar 404 quando a receita não pertencer ao usuário", async () => {
+      (recipeService.deleteRecipe as jest.Mock).mockResolvedValue(false);
+
+      const response = await request(app)
+        .delete("/api/recipes/recipe-unknown")
+        .set("Authorization", `Bearer ${token}`)
+        .expect(404);
+
+      expect(response.body).toEqual({
+        message: "Receita não encontrada.",
+      });
     });
   });
 });

@@ -134,3 +134,18 @@ export const updateRecipe = async (
 
   return recipe ? formatRecipe(recipe) : null;
 };
+
+export const deleteRecipe = async (id: string, userId: string) => {
+  const recipe = await prisma.recipe.findFirst({
+    where: { id, userId },
+    select: { id: true },
+  });
+
+  if (!recipe) return false;
+
+  await prisma.recipe.delete({
+    where: { id: recipe.id },
+  });
+
+  return true;
+};

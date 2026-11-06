@@ -14,7 +14,7 @@ import RecipeCard from "../components/RecipeCard";
 import Button from "../components/Button";
 import { useAuth } from "../hooks/useAuth";
 import { useFavorites } from "../hooks/useFavorites";
-import { getRecipes } from "../services/recipeService";
+import { deleteRecipe, getRecipes } from "../services/recipeService";
 import type { Recipe } from "../types/recipe";
 
 export const Perfil: React.FC = () => {
@@ -23,6 +23,9 @@ export const Perfil: React.FC = () => {
   const navigate = useNavigate();
   const [myRecipes, setMyRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
+  const [recipeActionError, setRecipeActionError] = useState("");
+  const [recipeToDelete, setRecipeToDelete] = useState<Recipe | null>(null);
+  const [isDeletingRecipe, setIsDeletingRecipe] = useState(false);
 
   useEffect(() => {
     async function loadProfileData() {
@@ -45,6 +48,32 @@ export const Perfil: React.FC = () => {
   const handleSignOut = () => {
     signOut();
     navigate("/");
+  };
+
+  const handleDeleteRecipe = (recipe: Recipe) => {
+    setRecipeActionError("");
+    setRecipeToDelete(recipe);
+  };
+
+  const confirmDeleteRecipe = async () => {
+    if (!recipeToDelete) return;
+
+    try {
+      setRecipeActionError("");
+      setIsDeletingRecipe(true);
+      await deleteRecipe(recipeToDelete.id);
+      setMyRecipes((current) =>
+        current.filter(
+          (currentRecipe) => currentRecipe.id !== recipeToDelete.id,
+        ),
+      );
+      setRecipeToDelete(null);
+    } catch (error) {
+      console.error("Erro ao excluir receita:", error);
+      setRecipeActionError("Não foi possível excluir a receita. Tente novamente.");
+    } finally {
+      setIsDeletingRecipe(false);
+    }
   };
 
   return (
@@ -109,6 +138,11 @@ export const Perfil: React.FC = () => {
           <main className="flex-1 w-full flex flex-col gap-10 sm:gap-12">
             {/* Receitas Favoritas */}
             <section className="flex flex-col gap-6 w-full">
+              {recipeActionError && (
+                <p className="font-spectral text-sm text-red-600">
+                  {recipeActionError}
+                </p>
+              )}
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2.5 text-zest">
                   <Heart className="w-6 h-6 fill-zest stroke-zest" />
@@ -184,7 +218,7 @@ export const Perfil: React.FC = () => {
                         <button
                           type="button"
                           title="Excluir receita"
-                          onClick={() => alert(`Excluir receita ${recipe.id}`)}
+                          onClick={() => handleDeleteRecipe(recipe)}
                           className="shrink-0 p-1.5 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -202,6 +236,64 @@ export const Perfil: React.FC = () => {
           </main>
         </div>
       </Container>
+
+      {recipeToDelete && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-6 backdrop-blur-[2px]"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget && !isDeletingRecipe) {
+              setRecipeToDelete(null);
+            }
+          }}
+        >
+          <div
+            aria-describedby="delete-recipe-description"
+            aria-labelledby="delete-recipe-title"
+            aria-modal="true"
+            className="flex w-full max-w-105 flex-col items-center gap-4 overflow-hidden rounded-3xl border border-black/10 bg-white p-6 shadow-[0_20px_48px_-8px_rgba(0,0,0,0.16)]"
+            role="dialog"
+          >
+            <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-red-50 text-red-600">
+              <Trash2 className="h-6 w-6" aria-hidden="true" />
+            </div>
+            <h2
+              id="delete-recipe-title"
+              className="font-aleo text-center text-xl font-medium leading-7 text-stone-800"
+            >
+              Excluir Receita?
+            </h2>
+            <p
+              id="delete-recipe-description"
+              className="text-center font-spectral text-sm leading-5.5 text-gray-600"
+            >
+              Tem certeza que deseja excluir a receita{" "}
+              <strong className="font-bold">
+                &apos;{recipeToDelete.title}&apos;
+              </strong>
+              ? Esta ação não poderá ser desfeita.
+            </p>
+            <div className="flex w-full gap-3">
+              <button
+                type="button"
+                onClick={() => setRecipeToDelete(null)}
+                disabled={isDeletingRecipe}
+                className="h-11 flex-1 rounded-xl border border-gray-300 px-6 py-2.5 font-spectral text-sm text-gray-600 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={confirmDeleteRecipe}
+                disabled={isDeletingRecipe}
+                className="h-11 flex-1 rounded-xl border border-zest bg-red-600 px-6 py-2.5 font-spectral text-sm text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isDeletingRecipe ? "Excluindo..." : "Sim, Excluir"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

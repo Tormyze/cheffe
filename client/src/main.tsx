@@ -12,7 +12,7 @@ import DetalhesReceita from "./pages/DetalhesReceita.tsx";
 import Login from "./pages/Login.tsx";
 import Cadastro from "./pages/Cadastro.tsx";
 import Perfil from "./pages/Perfil.tsx";
-import CriarReceita from "./pages/CriarReceita.tsx";
+import ReceitaForm from "./pages/ReceitaForm.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 const router = createBrowserRouter([
@@ -51,11 +51,11 @@ const router = createBrowserRouter([
           },
           {
             path: "criar",
-            element: <CriarReceita />,
+            element: <ReceitaForm />,
           },
           {
             path: "editar/:id",
-            element: <CriarReceita />,
+            element: <ReceitaForm />,
           },
         ],
       },

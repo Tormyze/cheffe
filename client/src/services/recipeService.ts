@@ -62,3 +62,7 @@ export const updateRecipe = async (
   const response = await api.patch<Recipe>(`/recipes/${id}`, data);
   return response.data;
 };
+
+export const deleteRecipe = async (id: string): Promise<void> => {
+  await api.delete(`/recipes/${id}`);
+};

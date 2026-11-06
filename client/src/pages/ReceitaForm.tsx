@@ -29,7 +29,7 @@ const emptyIngredient = (): IngredientForm => ({
 const requiredFieldMessage =
   "Este campo é obrigatório para criar a receita.";
 
-export default function CriarReceita() {
+export default function ReceitaForm() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEditing = Boolean(id);
