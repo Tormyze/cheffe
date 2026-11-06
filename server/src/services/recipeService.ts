@@ -84,3 +84,53 @@ export const createRecipe = async (
 
   return formatRecipe(recipe);
 };
+
+export const updateRecipe = async (
+  id: string,
+  userId: string,
+  data: CreateRecipeInput,
+) => {
+  const recipe = await prisma.$transaction(async (transaction) => {
+    const existingRecipe = await transaction.recipe.findFirst({
+      where: { id, userId },
+    });
+
+    if (!existingRecipe) return null;
+
+    await transaction.recipeIngredient.deleteMany({
+      where: { recipeId: id },
+    });
+
+    const recipeIngredients = [];
+
+    for (const ingredient of data.ingredients) {
+      const savedIngredient = await transaction.ingredient.upsert({
+        where: { name: ingredient.name },
+        update: {},
+        create: { name: ingredient.name },
+      });
+
+      recipeIngredients.push({
+        ingredientId: savedIngredient.id,
+        amount: ingredient.amount,
+        unit: ingredient.unit,
+        description: ingredient.description,
+      });
+    }
+
+    return transaction.recipe.update({
+      where: { id },
+      data: {
+        title: data.title,
+        imgUrl: data.imgUrl,
+        category: data.category,
+        prepTime: data.prepTime,
+        steps: data.steps,
+        ingredients: { create: recipeIngredients },
+      },
+      include: includeIngredients,
+    });
+  });
+
+  return recipe ? formatRecipe(recipe) : null;
+};

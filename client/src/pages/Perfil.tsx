@@ -1,6 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
-import { Heart, ChefHat, Plus, Edit2, Pencil, Trash2, LogOut } from "lucide-react";
+import {
+  Heart,
+  ChefHat,
+  Plus,
+  Edit2,
+  Pencil,
+  Trash2,
+  LogOut,
+} from "lucide-react";
 import Container from "../layout/Container";
 import RecipeCard from "../components/RecipeCard";
 import Button from "../components/Button";
@@ -43,7 +51,6 @@ export const Perfil: React.FC = () => {
     <section className="py-8 sm:py-12 md:py-16 text-black">
       <Container>
         <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
-          
           {/* Card de Informações do Usuário (Sidebar no Desktop) */}
           <aside className="w-full lg:w-80 shrink-0 bg-white p-6 rounded-2xl border border-black/10 flex flex-col items-center gap-6 text-center shadow-xs">
             <article className="flex flex-col items-center gap-4 w-full">
@@ -65,7 +72,9 @@ export const Perfil: React.FC = () => {
                   {user?.name || "Novo Cheffe"}
                 </h1>
                 <span className="font-spectral text-sm text-gray-500">
-                  @{user?.name?.toLowerCase().replace(/\s+/g, "") || "cheffe_user"}
+                  @
+                  {user?.name?.toLowerCase().replace(/\s+/g, "") ||
+                    "cheffe_user"}
                 </span>
               </div>
             </article>
@@ -98,7 +107,6 @@ export const Perfil: React.FC = () => {
 
           {/* Centro: Receitas Favoritas + Minhas Receitas */}
           <main className="flex-1 w-full flex flex-col gap-10 sm:gap-12">
-            
             {/* Receitas Favoritas */}
             <section className="flex flex-col gap-6 w-full">
               <div className="flex flex-col gap-1">
@@ -114,7 +122,9 @@ export const Perfil: React.FC = () => {
               </div>
 
               {loadingFavorites ? (
-                <div className="py-8 font-spectral text-gray-500">Carregando favoritos...</div>
+                <div className="py-8 font-spectral text-gray-500">
+                  Carregando favoritos...
+                </div>
               ) : favoriteRecipes.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                   {favoriteRecipes.map((recipe) => (
@@ -152,20 +162,22 @@ export const Perfil: React.FC = () => {
               </div>
 
               {loading ? (
-                <div className="py-8 font-spectral text-gray-500">Carregando suas receitas...</div>
+                <div className="py-8 font-spectral text-gray-500">
+                  Carregando suas receitas...
+                </div>
               ) : myRecipes.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                   {myRecipes.map((recipe) => (
                     <div key={`my-${recipe.id}`} className="relative group">
                       <RecipeCard recipe={recipe} />
-                      
+
                       {/* Ações de Edição/Exclusão para receitas do próprio usuário */}
-                      <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-white/90 backdrop-blur-xs p-1.5 rounded-xl shadow-xs border border-black/10">
+                      <div className="absolute top-2 right-2 sm:top-auto sm:right-3 sm:bottom-23 flex items-center gap-1 bg-white/90 backdrop-blur-xs p-1 rounded-xl shadow-xs border border-black/10">
                         <button
                           type="button"
                           title="Editar receita"
-                          onClick={() => alert(`Editar receita ${recipe.id}`)}
-                          className="p-1.5 text-gray-700 hover:text-zest hover:bg-zest/10 rounded-lg transition-colors cursor-pointer"
+                          onClick={() => navigate(`/editar/${recipe.id}`)}
+                          className="shrink-0 p-1.5 text-gray-700 hover:text-zest hover:bg-zest/10 rounded-lg transition-colors cursor-pointer"
                         >
                           <Pencil className="w-4 h-4" />
                         </button>
@@ -173,7 +185,7 @@ export const Perfil: React.FC = () => {
                           type="button"
                           title="Excluir receita"
                           onClick={() => alert(`Excluir receita ${recipe.id}`)}
-                          className="p-1.5 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                          className="shrink-0 p-1.5 text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -187,7 +199,6 @@ export const Perfil: React.FC = () => {
                 </div>
               )}
             </section>
-
           </main>
         </div>
       </Container>

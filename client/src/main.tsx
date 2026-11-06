@@ -53,6 +53,10 @@ const router = createBrowserRouter([
             path: "criar",
             element: <CriarReceita />,
           },
+          {
+            path: "editar/:id",
+            element: <CriarReceita />,
+          },
         ],
       },
       // Protected Routes (Rotas Protegidas) //

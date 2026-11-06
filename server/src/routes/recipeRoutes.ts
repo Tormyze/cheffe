@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   checkHealth,
+  editRecipe,
   getRecipeById,
   getRecipes,
   postRecipe,
@@ -13,6 +14,7 @@ router.get("/", getRecipes);
 router.get("/:id", getRecipeById);
 
 router.post("/", authenticateToken, postRecipe);
+router.patch("/:id", authenticateToken, editRecipe);
 
 // monitoramento e keep-alive
 router.get("/health", checkHealth);

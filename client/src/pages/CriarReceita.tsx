@@ -1,12 +1,17 @@
 import {
   useState,
+  useEffect,
   type ChangeEvent,
   type FormEvent,
   type InvalidEvent,
 } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useParams } from "react-router";
 import { ChevronDown, Image as ImageIcon, Trash2 } from "lucide-react";
-import { createRecipe } from "../services/recipeService";
+import {
+  createRecipe,
+  getRecipeById,
+  updateRecipe,
+} from "../services/recipeService";
 import { CATEGORIES, type Category } from "../types/recipe";
 
 interface IngredientForm {
@@ -26,6 +31,8 @@ const requiredFieldMessage =
 
 export default function CriarReceita() {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const isEditing = Boolean(id);
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState<Category>("Doces");
   const [prepTime, setPrepTime] = useState("");
@@ -41,6 +48,37 @@ export default function CriarReceita() {
   const [imageError, setImageError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [isLoadingRecipe, setIsLoadingRecipe] = useState(isEditing);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const loadRecipe = async () => {
+      try {
+        const recipe = await getRecipeById(id);
+        setTitle(recipe.title);
+        setCategory(recipe.category);
+        setPrepTime(String(recipe.prepTime));
+        setImgUrl(recipe.imgUrl);
+        setIngredients(
+          recipe.ingredients.map((ingredient) => ({
+            name: ingredient.name,
+            quantity:
+              ingredient.amount === undefined ? "" : String(ingredient.amount),
+            unit: ingredient.unit || "",
+          })),
+        );
+        setSteps(recipe.steps);
+      } catch (error) {
+        console.error("Erro ao carregar receita para edição:", error);
+        setSubmitError("Não foi possível carregar a receita.");
+      } finally {
+        setIsLoadingRecipe(false);
+      }
+    };
+
+    loadRecipe();
+  }, [id]);
 
   const handleRequiredInvalid = (
     event: InvalidEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
@@ -104,7 +142,7 @@ export default function CriarReceita() {
     setSubmitError("");
 
     try {
-      await createRecipe({
+      const recipeData = {
         title,
         category,
         prepTime: Number(prepTime),
@@ -115,15 +153,29 @@ export default function CriarReceita() {
           unit,
         })),
         steps,
-      });
+      };
+
+      if (id) {
+        await updateRecipe(id, recipeData);
+      } else {
+        await createRecipe(recipeData);
+      }
       navigate("/perfil");
     } catch (error) {
-      console.error("Erro ao criar receita:", error);
-      setSubmitError("Não foi possível criar a receita. Tente novamente.");
+      console.error("Erro ao salvar receita:", error);
+      setSubmitError("Não foi possível salvar a receita. Tente novamente.");
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (isLoadingRecipe) {
+    return (
+      <div className="py-20 text-center font-spectral text-stone-500">
+        Carregando receita...
+      </div>
+    );
+  }
 
   return (
     <section className="bg-white py-8 text-stone-800 sm:py-12">
@@ -136,7 +188,9 @@ export default function CriarReceita() {
         </Link>
 
         <header className="mt-8">
-          <h1 className="font-aleo text-3xl font-medium">Criar Nova Receita</h1>
+          <h1 className="font-aleo text-3xl font-medium">
+            {isEditing ? "Editar Receita" : "Criar Nova Receita"}
+          </h1>
           <p className="mt-2 font-spectral text-sm text-stone-500">
             Compartilhe suas melhores criações culinárias com a comunidade do
             Cheffe.
@@ -389,7 +443,7 @@ export default function CriarReceita() {
 
           <footer className="flex flex-col gap-4 border-t border-stone-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="font-spectral text-xs">
-              <p>Pronto para compartilhar?</p>
+              <p>{isEditing ? "Salvar alterações?" : "Pronto para compartilhar?"}</p>
               <p className="mt-1 text-stone-500">
                 Sua receita ficará visível para toda a comunidade.
               </p>
@@ -406,7 +460,13 @@ export default function CriarReceita() {
                 disabled={isSubmitting}
                 className="rounded-xl bg-zest px-5 py-2.5 font-spectral text-sm text-white transition-colors hover:bg-zest-dark disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSubmitting ? "Criando..." : "Criar Receita"}
+                {isSubmitting
+                  ? isEditing
+                    ? "Salvando..."
+                    : "Criando..."
+                  : isEditing
+                    ? "Salvar Alterações"
+                    : "Criar Receita"}
               </button>
             </div>
           </footer>

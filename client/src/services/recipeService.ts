@@ -54,3 +54,11 @@ export const createRecipe = async (data: CreateRecipePayload): Promise<Recipe> =
   const response = await api.post<Recipe>("/recipes", data);
   return response.data;
 };
+
+export const updateRecipe = async (
+  id: string,
+  data: CreateRecipePayload,
+): Promise<Recipe> => {
+  const response = await api.patch<Recipe>(`/recipes/${id}`, data);
+  return response.data;
+};

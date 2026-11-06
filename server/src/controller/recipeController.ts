@@ -90,6 +90,76 @@ export const postRecipe = async (req: AuthenticatedRequest, res: Response) => {
   }
 };
 
+export const editRecipe = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  try {
+    const userId = req.user?.id;
+    const { id } = req.params;
+    const {
+      title,
+      imgUrl,
+      category,
+      prepTime,
+      ingredients,
+      steps,
+    }: CreateRecipeInput = req.body;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Usuário não autenticado." });
+    }
+
+    if (typeof id !== "string" || !id) {
+      return res.status(400).json({ error: "Identificador da receita inválido." });
+    }
+
+    if (
+      !title ||
+      !imgUrl ||
+      !category ||
+      !Number.isFinite(prepTime) ||
+      !Array.isArray(ingredients) ||
+      !ingredients.length ||
+      !Array.isArray(steps) ||
+      !steps.length
+    ) {
+      return res.status(400).json({ error: "Dados da receita inválidos." });
+    }
+
+    if (
+      ingredients.some(
+        (ingredient) =>
+          !ingredient ||
+          typeof ingredient.name !== "string" ||
+          !ingredient.name.trim(),
+      )
+    ) {
+      return res
+        .status(400)
+        .json({ error: "Dados dos ingredientes inválidos." });
+    }
+
+    const recipe = await recipeService.updateRecipe(id, userId, {
+      title,
+      imgUrl,
+      category,
+      prepTime,
+      ingredients,
+      steps,
+    });
+
+    if (!recipe) {
+      return res.status(404).json({ message: "Receita não encontrada." });
+    }
+
+    return res.status(200).json(recipe);
+  } catch (error) {
+    console.error("Erro ao editar receita:", error);
+    return res.status(500).json({ message: "Erro interno no servidor" });
+  }
+};
+
 export const checkHealth = (req: Request, res: Response) =>
   res.status(200).json({ status: "OK", uptime: process.uptime() });
 
