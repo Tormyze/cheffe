@@ -49,7 +49,7 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const toggleFavorite = async (recipeId: string) => {
     if (!isAuthenticated) {
-      alert("Faça login para favoritar receitas!");
+      window.location.href = "/login";
       return;
     }
 

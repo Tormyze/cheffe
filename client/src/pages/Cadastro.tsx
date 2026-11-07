@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router";
 import Container from "../layout/Container";
 import { Input } from "../components/Input";
 import Button from "../components/Button";
-import googleIcon from "../assets/icons/google.svg";
+// import googleIcon from "../assets/icons/google.svg";
 import axios from "axios";
 import { registerUser } from "../services/recipeService";
 
@@ -175,7 +175,7 @@ export const Cadastro: React.FC = () => {
                 {loading ? "Cadastrando..." : "Cadastrar"}
               </Button>
 
-              {/* Divisor "ou" */}
+              {/* Botão do Google
               <div className="w-full flex items-center justify-center gap-3 my-1">
                 <div className="flex-1 h-px bg-gray-200" />
                 <span className="text-gray-500 text-sm sm:text-base font-normal font-spectral">
@@ -184,7 +184,6 @@ export const Cadastro: React.FC = () => {
                 <div className="flex-1 h-px bg-gray-200" />
               </div>
 
-              {/* Botão do Google */}
               <button
                 type="button"
                 onClick={() => alert("Cadastro com Google em desenvolvimento.")}
@@ -192,7 +191,7 @@ export const Cadastro: React.FC = () => {
               >
                 <img src={googleIcon} alt="Google logo" className="w-4 h-4" />
                 <span>Criar conta com Google</span>
-              </button>
+              </button> */}
 
               {/* Link para Login */}
               <div className="w-full flex flex-wrap items-center justify-center gap-1.5 mt-2 text-sm sm:text-base font-spectral text-gray-700">

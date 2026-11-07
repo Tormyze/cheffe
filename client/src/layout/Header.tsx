@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { Menu, X } from "lucide-react";
 import Container from "./Container";
-// import Button from "../components/Button";
+import Button from "../components/Button";
 import UserProfileBadge from "../components/UserProfileBadge";
 import { useAuth } from "../hooks/useAuth";
 
@@ -36,7 +36,7 @@ export default function Header() {
               <UserProfileBadge />
             ) : (
               <div className="text-sm flex items-center gap-4">
-                {/* <Link to="/login">
+                <Link to="/login">
                   <Button className="outline outline-zest-light text-zest hover:bg-zest/10 transition-colors cursor-pointer">
                     Entrar
                   </Button>
@@ -45,7 +45,7 @@ export default function Header() {
                   <Button className="bg-zest text-white hover:opacity-90 transition-opacity cursor-pointer">
                     Criar
                   </Button>
-                </Link> */}
+                </Link>
               </div>
             )}
           </nav>
@@ -89,7 +89,7 @@ export default function Header() {
               </div>
             ) : (
               <div className="flex flex-col gap-2 pt-2 border-t border-black/10">
-                {/* <Link
+                <Link
                   to="/login"
                   onClick={() => setIsMenuOpen(false)}
                   className="w-full text-center py-2 rounded-xl outline outline-zest-light font-medium"
@@ -102,7 +102,7 @@ export default function Header() {
                   className="w-full text-center py-2 bg-zest rounded-xl text-white font-medium"
                 >
                   Criar
-                </Link> */}
+                </Link>
               </div>
             )}
           </nav>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
-import { Check, Square } from "lucide-react";
+import { ChefHat, Check, Square } from "lucide-react";
 import Container from "../layout/Container";
 import { getRecipeById } from "../services/recipeService";
 import type { Recipe } from "../types/recipe";
@@ -89,19 +89,41 @@ export default function DetalhesReceita() {
 
         {/* Imagem + Ingredientes */}
         <section className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12 items-start pt-2">
-          <div className="w-full overflow-hidden rounded-2xl shadow-sm">
+          <div className="relative w-full overflow-hidden rounded-2xl shadow-sm">
             <img
               src={recipe.imgUrl}
               alt={recipe.title}
               className="aspect-square w-full object-cover"
             />
+            {recipe.user && (
+              <div
+                title={`Receita de @${recipe.user.username}`}
+                aria-label={`Receita de @${recipe.user.username}`}
+                className="absolute bottom-3 left-3 flex max-w-[calc(100%-1.5rem)] items-center gap-2 rounded-full bg-white/70 px-2 py-1.5 text-sm text-black backdrop-blur-sm"
+              >
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zest/15 text-zest">
+                  <ChefHat
+                    className="h-4 w-4 stroke-[1.5]"
+                    aria-hidden="true"
+                  />
+                </span>
+                <span className="truncate font-spectral">
+                  Por <span className="font-medium">@{recipe.user.username}</span>
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Ingredientes */}
           <div className="flex flex-col gap-6">
-            <h2 className="border-b-2 border-zest pb-2 font-aleo text-3xl font-medium text-zest sm:text-4xl lg:text-5xl">
-              Ingredientes
-            </h2>
+            <div className="border-b-2 border-zest pb-2">
+              <h2 className="font-aleo text-3xl font-medium text-zest sm:text-4xl lg:text-5xl">
+                Ingredientes
+              </h2>
+              <p className="mt-1 font-spectral text-sm text-black/60 sm:text-base">
+                Clique nos ingredientes para marcá-los como separados.
+              </p>
+            </div>
 
             <ul className="space-y-4">
               {recipe.ingredients.map((ingredient) => {
@@ -143,16 +165,22 @@ export default function DetalhesReceita() {
                 );
               })}
             </ul>
+
           </div>
         </section>
 
         {/* Seção Inferior: Modo de Preparo */}
         <section className="flex flex-col gap-8 pt-6">
-          <div className="border-b-2 border-zest pb-2 flex items-baseline justify-between">
-            <h2 className="font-aleo text-3xl font-medium text-zest sm:text-4xl lg:text-5xl">
-              Modo de Preparo
-            </h2>
-            <span className="font-aleo text-xl font-medium text-black/60 sm:text-2xl lg:text-3xl">
+          <div className="border-b-2 border-zest pb-2 flex items-end justify-between gap-4">
+            <div>
+              <h2 className="font-aleo text-3xl font-medium text-zest sm:text-4xl lg:text-5xl">
+                Modo de Preparo
+              </h2>
+              <p className="mt-1 font-spectral text-sm text-black/60 sm:text-base">
+                Clique em cada passo para marcá-lo como concluído.
+              </p>
+            </div>
+            <span className="shrink-0 font-aleo text-xl font-medium text-black/60 sm:text-2xl lg:text-3xl">
               ~{recipe.prepTime}min
             </span>
           </div>
