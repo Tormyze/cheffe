@@ -5,10 +5,10 @@ import * as authService from "../services/authService";
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, username, bio } = req.body;
 
     // validação básica do backend para os campos obrigatórios conforme as regras de negócio
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !username) {
       return res.status(400).json({ error: "Todos os campos são obrigatórios." });
     }
 
@@ -16,7 +16,7 @@ export const register = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "A senha deve conter no mínimo 6 caracteres." });
     }
 
-    const user = await authService.registerUser(name, email, password);
+    const user = await authService.registerUser(name, email, password, username, bio);
     return res.status(201).json({ message: "Usuário cadastrado com sucesso!", user });
   } catch (error: any) {
     const statusCode = error.statusCode || 500;
@@ -49,6 +49,8 @@ export const getProfile = async (req: AuthenticatedRequest, res: Response) => {
       select: {
         id: true,
         name: true,
+        username: true,
+        bio: true,
         email: true,
         createdAt: true,
         recipes: true
@@ -62,5 +64,20 @@ export const getProfile = async (req: AuthenticatedRequest, res: Response) => {
     return res.status(200).json({ user });
   } catch (error: any) {
     return res.status(500).json({ error: "Erro ao buscar dados do perfil." });
+  }
+};
+
+export const updateProfile = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "Usuário não autenticado." });
+    }
+
+    const user = await authService.updateProfile(userId, req.body);
+    return res.status(200).json({ user });
+  } catch (error: any) {
+    const statusCode = error.statusCode || 500;
+    return res.status(statusCode).json({ error: error.message || "Erro ao atualizar perfil." });
   }
 };

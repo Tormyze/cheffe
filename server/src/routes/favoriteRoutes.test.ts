@@ -18,6 +18,8 @@ describe("Favorite Routes Integration Tests (/api/favorites)", () => {
     const user = await prisma.user.create({
       data: {
         name: "User Teste Favoritos",
+        username: "user_teste_favoritos",
+        bio: "",
         email: `fav_test_${Date.now()}@example.com`,
         password: hashedPassword,
       },

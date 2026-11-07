@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register, login, getProfile } from "../controller/authController";
+import { register, login, getProfile, updateProfile } from "../controller/authController";
 import { authenticateToken } from "../middlewares/authMiddleware";
 
 const router = Router();
@@ -7,6 +7,7 @@ const router = Router();
 router.post("/register", register);
 router.post("/login", login);
 router.get("/me", authenticateToken, getProfile);
+router.patch("/me", authenticateToken, updateProfile);
 
 export default router;
 
