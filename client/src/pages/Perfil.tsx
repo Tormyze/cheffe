@@ -4,21 +4,20 @@ import {
   Heart,
   ChefHat,
   Plus,
-  Edit2,
   Pencil,
   Trash2,
-  LogOut,
 } from "lucide-react";
 import Container from "../layout/Container";
 import RecipeCard from "../components/RecipeCard";
 import Button from "../components/Button";
+import UserProfileCard from "../components/UserProfileCard";
 import { useAuth } from "../hooks/useAuth";
 import { useFavorites } from "../hooks/useFavorites";
-import { deleteRecipe, getRecipes } from "../services/recipeService";
+import { deleteRecipe, getRecipes, updateProfile } from "../services/recipeService";
 import type { Recipe } from "../types/recipe";
 
 export const Perfil: React.FC = () => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, updateUser } = useAuth();
   const { favoriteRecipes, loadingFavorites } = useFavorites();
   const navigate = useNavigate();
   const [myRecipes, setMyRecipes] = useState<Recipe[]>([]);
@@ -80,59 +79,12 @@ export const Perfil: React.FC = () => {
     <section className="py-8 sm:py-12 md:py-16 text-black">
       <Container>
         <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
-          {/* Card de Informações do Usuário (Sidebar no Desktop) */}
-          <aside className="w-full lg:w-80 shrink-0 bg-white p-6 rounded-2xl border border-black/10 flex flex-col items-center gap-6 text-center shadow-xs">
-            <article className="flex flex-col items-center gap-4 w-full">
-              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-2 border-zest/30 shadow-inner">
-                <div
-                  role="img"
-                  aria-label={user?.name || "Foto de perfil"}
-                  className="flex h-full w-full items-center justify-center bg-orange-50 text-zest"
-                >
-                  <ChefHat
-                    className="h-16 w-16 stroke-[1.5] sm:h-20 sm:w-20"
-                    aria-hidden="true"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center gap-1 w-full">
-                <h1 className="font-aleo text-2xl sm:text-3xl font-medium text-zest">
-                  {user?.name || "Novo Cheffe"}
-                </h1>
-                <span className="font-spectral text-sm text-gray-500">
-                  @
-                  {user?.name?.toLowerCase().replace(/\s+/g, "") ||
-                    "cheffe_user"}
-                </span>
-              </div>
-            </article>
-
-            <p className="font-spectral text-sm text-gray-700 leading-relaxed">
-              Testando e criando novas receitas!
-            </p>
-
-            {/* Grupo de Ações do Usuário */}
-            <div className="flex flex-col gap-3 w-full">
-              <button
-                type="button"
-                onClick={() => alert("Edição de perfil em breve!")}
-                className="w-full py-2.5 px-4 rounded-xl border border-zest text-zest font-spectral font-medium text-sm flex items-center justify-center gap-2 hover:bg-zest/5 transition-colors cursor-pointer"
-              >
-                <Edit2 className="w-4 h-4 stroke-2" />
-                <span>Editar perfil</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleSignOut}
-                className="w-full py-2.5 px-4 rounded-xl border border-red-500 text-red-600 font-spectral font-medium text-sm flex items-center justify-center gap-2 hover:bg-red-50 transition-colors cursor-pointer"
-              >
-                <LogOut className="w-4 h-4 stroke-2" />
-                <span>Sair da conta</span>
-              </button>
-            </div>
-          </aside>
+          <UserProfileCard
+            user={user}
+            onUpdateProfile={updateProfile}
+            onUserUpdated={updateUser}
+            onSignOut={handleSignOut}
+          />
 
           {/* Centro: Receitas Favoritas + Minhas Receitas */}
           <main className="flex-1 w-full flex flex-col gap-10 sm:gap-12">

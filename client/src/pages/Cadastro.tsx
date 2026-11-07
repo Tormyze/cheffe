@@ -9,6 +9,8 @@ import { registerUser } from "../services/recipeService";
 
 export const Cadastro: React.FC = () => {
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [bio, setBio] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -31,11 +33,24 @@ export const Cadastro: React.FC = () => {
       return;
     }
 
+    const normalizedUsername = username.trim().toLowerCase();
+    if (!/^[a-z0-9_]{1,20}$/.test(normalizedUsername)) {
+      setError("Username deve ter entre 1 e 20 caracteres e conter apenas letras, números e underscore.");
+      return;
+    }
+
+    if (bio.length > 200) {
+      setError("A bio deve ter no máximo 200 caracteres.");
+      return;
+    }
+
     try {
       setLoading(true);
 
       await registerUser({
         name,
+        username: normalizedUsername,
+        bio,
         email,
         password,
       });
@@ -45,7 +60,7 @@ export const Cadastro: React.FC = () => {
       console.error("Erro no cadastro:", err);
       let message = "Erro ao realizar cadastro. Tente novamente.";
       if (axios.isAxiosError(err)) {
-        message = err.response?.data?.message || message;
+        message = err.response?.data?.error || message;
       }
       setError(message);
     } finally {
@@ -90,6 +105,37 @@ export const Cadastro: React.FC = () => {
                 onChange={(e) => setName(e.target.value)}
                 required
               />
+
+              <Input
+                label="Username"
+                type="text"
+                placeholder="seu_username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value.toLowerCase())}
+                maxLength={20}
+                required
+              />
+
+              <div className="flex flex-col gap-1.5 text-left">
+                <label
+                  htmlFor="bio"
+                  className="text-base font-medium text-gray-700 font-spectral"
+                >
+                  Bio (opcional)
+                </label>
+                <textarea
+                  id="bio"
+                  placeholder="Conte um pouco sobre você"
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  maxLength={200}
+                  rows={3}
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-900 placeholder-gray-500 font-spectral text-base transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
+                />
+                <span className="text-xs text-gray-500 text-right">
+                  {bio.length}/200
+                </span>
+              </div>
 
               <Input
                 label="E-mail"

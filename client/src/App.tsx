@@ -1,7 +1,7 @@
 import Header from "./layout/Header";
 import Footer from "./layout/Footer";
 import { Outlet } from "react-router";
-import ScrollToAnchor from "./hooks/ScrollToAnchor";
+import ScrollToAnchor from "./components/ScrollToAnchor";
 
 export default function App() {
   return (

@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { loginUser, registerUser, type LoginPayload, type RegisterPayload } from "../services/recipeService";
+import {
+  getProfile,
+  loginUser,
+  registerUser,
+  type LoginPayload,
+  type RegisterPayload,
+} from "../services/recipeService";
 import { AuthContext, type User } from "./authContext";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -15,6 +21,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (storedToken && storedUser) {
         try {
           setUser(JSON.parse(storedUser));
+          getProfile()
+            .then((freshUser) => {
+              setUser(freshUser);
+              localStorage.setItem("@cheffe:user", JSON.stringify(freshUser));
+            })
+            .catch((error) => {
+              console.error("Erro ao atualizar dados do usuário:", error);
+            });
         } catch (error) {
           console.error("Erro ao carregar usuário do localStorage:", error);
           localStorage.removeItem("@cheffe:token");
@@ -39,6 +53,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await registerUser(credentials);
   };
 
+  const updateUser = (updatedUser: User) => {
+    setUser(updatedUser);
+    localStorage.setItem("@cheffe:user", JSON.stringify(updatedUser));
+  };
+
   const signOut = () => {
     localStorage.removeItem("@cheffe:token");
     localStorage.removeItem("@cheffe:user");
@@ -53,6 +72,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loading,
         signIn,
         signUp,
+        updateUser,
         signOut,
       }}
     >
