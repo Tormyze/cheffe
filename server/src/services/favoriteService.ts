@@ -41,7 +41,7 @@ export const favoriteService = {
             user: {
               select: {
                 id: true,
-                name: true,
+                username: true,
               },
             },
           },

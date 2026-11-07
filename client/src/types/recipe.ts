@@ -6,6 +6,10 @@ export interface Recipe {
   prepTime: number;
   ingredients: Ingredient[];
   steps: string[];
+  user: {
+    id: string;
+    username: string;
+  } | null;
 }
 
 export interface Ingredient {

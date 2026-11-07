@@ -9,6 +9,12 @@ const formatRecipe = (recipe: any) => ({
   category: recipe.category,
   prepTime: recipe.prepTime,
   steps: recipe.steps,
+  user: recipe.user
+    ? {
+        id: recipe.user.id,
+        username: recipe.user.username,
+      }
+    : null,
   ingredients: recipe.ingredients.map((item: any) => ({
     id: item.ingredient.id,
     name: item.ingredient.name,
@@ -27,9 +33,19 @@ const includeIngredients = {
   },
 };
 
+const includeRecipeRelations = {
+  ...includeIngredients,
+  user: {
+    select: {
+      id: true,
+      username: true,
+    },
+  },
+};
+
 export const getAllRecipes = async () => {
   const recipes = await prisma.recipe.findMany({
-    include: includeIngredients,
+    include: includeRecipeRelations,
   });
 
   return recipes.map(formatRecipe);
@@ -38,7 +54,7 @@ export const getAllRecipes = async () => {
 export const getRecipeById = async (id: string) => {
   const recipe = await prisma.recipe.findUnique({
     where: { id },
-    include: includeIngredients,
+    include: includeRecipeRelations,
   });
 
   if (!recipe) return null;
@@ -78,7 +94,7 @@ export const createRecipe = async (
         user: { connect: { id: userId } },
         ingredients: { create: recipeIngredients },
       },
-      include: includeIngredients,
+      include: includeRecipeRelations,
     });
   });
 
@@ -128,7 +144,7 @@ export const updateRecipe = async (
         steps: data.steps,
         ingredients: { create: recipeIngredients },
       },
-      include: includeIngredients,
+      include: includeRecipeRelations,
     });
   });
 

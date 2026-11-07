@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Heart } from "lucide-react";
+import { ChefHat, Heart } from "lucide-react";
 import type { Recipe } from "../types/recipe";
 import { useFavorites } from "../hooks/useFavorites";
 
@@ -39,6 +39,24 @@ export default function RecipeCard({
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
 
+          {recipe.user && (
+            <div
+              title={`Receita de @${recipe.user.username}`}
+              aria-label={`Receita de @${recipe.user.username}`}
+              className="absolute bottom-2 left-2 hidden max-w-[calc(100%-1rem)] items-center gap-1.5 rounded-full bg-black/45 px-1.5 py-1 text-white backdrop-blur-sm sm:flex"
+            >
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/20 sm:h-6 sm:w-6">
+                <ChefHat
+                  className="h-3 w-3 stroke-[1.5] sm:h-3.5 sm:w-3.5"
+                  aria-hidden="true"
+                />
+              </span>
+              <span className="max-w-28 truncate text-xs font-medium">
+                @{recipe.user.username}
+              </span>
+            </div>
+          )}
+
           <button
             type="button"
             onClick={handleFavoriteClick}
@@ -65,9 +83,24 @@ export default function RecipeCard({
             </p>
           </div>
 
-          <span className="font-aleo text-sm font-semibold text-black sm:text-base">
-            {prepTimeLabel}
-          </span>
+          <div className="flex min-w-0 flex-col items-start gap-1">
+            <span className="font-aleo text-sm font-semibold text-black sm:text-base">
+              {prepTimeLabel}
+            </span>
+            {recipe.user && (
+              <span
+                title={`Receita de @${recipe.user.username}`}
+                aria-label={`Receita de @${recipe.user.username}`}
+                className="flex min-w-0 max-w-full items-center gap-1 text-xs text-black/60 sm:hidden"
+              >
+                <ChefHat
+                  className="h-3.5 w-3.5 shrink-0 stroke-[1.5]"
+                  aria-hidden="true"
+                />
+                <span className="truncate">@{recipe.user.username}</span>
+              </span>
+            )}
+          </div>
         </div>
       </article>
     </Link>

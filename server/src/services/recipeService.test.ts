@@ -21,6 +21,7 @@ describe('Recipe Service - Testes Unitários', () => {
       category: 'Sobremesas',
       prepTime: 45,
       steps: ['Passo 1', 'Passo 2'],
+      user: { id: 'user-1', username: 'paulo_123' },
       ingredients: [
         {
           ingredient: { id: 'ing1', name: 'Farinha' },
@@ -47,6 +48,7 @@ describe('Recipe Service - Testes Unitários', () => {
       expect(result).toHaveLength(1);
       expect(result[0].title).toBe('Bolo de Cenoura');
       expect(result[0].ingredients[0].name).toBe('Farinha');
+      expect(result[0].user).toEqual({ id: 'user-1', username: 'paulo_123' });
     });
   });
 
@@ -61,6 +63,18 @@ describe('Recipe Service - Testes Unitários', () => {
       );
       expect(result).not.toBeNull();
       expect(result?.id).toBe('1');
+      expect(result?.user).toEqual({ id: 'user-1', username: 'paulo_123' });
+    });
+
+    it('deve retornar user nulo para receitas sem dono', async () => {
+      (prisma.recipe.findUnique as jest.Mock).mockResolvedValue({
+        ...dbMockRecipes[0],
+        user: null,
+      });
+
+      const result = await getRecipeById('without-owner');
+
+      expect(result?.user).toBeNull();
     });
 
     it('deve retornar null se a receita não for encontrada', async () => {
