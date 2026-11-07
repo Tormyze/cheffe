@@ -11,7 +11,8 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
   const [favoriteRecipes, setFavoriteRecipes] = useState<Recipe[]>([]);
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
   const [loadingFavorites, setLoadingFavorites] = useState(false);
-  const isFavorite = (recipeId: string) => favoriteIds.includes(recipeId);
+  const isFavorite = (recipeId: string) =>
+    isAuthenticated && favoriteIds.includes(recipeId);
 
   const fetchFavorites = async () => {
     if (!isAuthenticated) {
@@ -33,7 +34,6 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    // se não estiver autenticado, a busca nem inicia
     if (!isAuthenticated) return;
 
     favoriteService
@@ -76,8 +76,8 @@ export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <FavoritesContext.Provider
       value={{
-        favoriteIds,
-        favoriteRecipes,
+        favoriteIds: isAuthenticated ? favoriteIds : [],
+        favoriteRecipes: isAuthenticated ? favoriteRecipes : [],
         loadingFavorites,
         isFavorite,
         toggleFavorite,

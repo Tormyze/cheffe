@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { ChefHat, Heart } from "lucide-react";
 import type { Recipe } from "../types/recipe";
+import { useAuth } from "../hooks/useAuth";
 import { useFavorites } from "../hooks/useFavorites";
 
 export default function RecipeCard({
@@ -10,6 +11,7 @@ export default function RecipeCard({
   recipe: Recipe;
   className?: string;
 }) {
+  const { isAuthenticated } = useAuth();
   const { isFavorite, toggleFavorite } = useFavorites();
   const fav = isFavorite ? isFavorite(recipe.id) : false;
 
@@ -57,20 +59,22 @@ export default function RecipeCard({
             </div>
           )}
 
-          <button
-            type="button"
-            onClick={handleFavoriteClick}
-            className="absolute top-2 right-2 rounded-full bg-white/80 p-2 backdrop-blur-sm transition-transform hover:scale-110 hover:cursor-pointer active:scale-95 shadow-sm outline-none"
-            aria-label={
-              fav ? "Remover dos favoritos" : "Adicionar aos favoritos"
-            }
-          >
-            <Heart
-              className={`h-4 w-4 transition-colors sm:h-5 sm:w-5 ${
-                fav ? "fill-zest text-zest" : "text-black hover:text-zest"
-              }`}
-            />
-          </button>
+          {isAuthenticated && (
+            <button
+              type="button"
+              onClick={handleFavoriteClick}
+              className="absolute top-2 right-2 rounded-full bg-white/80 p-2 backdrop-blur-sm transition-transform hover:scale-110 hover:cursor-pointer active:scale-95 shadow-sm outline-none"
+              aria-label={
+                fav ? "Remover dos favoritos" : "Adicionar aos favoritos"
+              }
+            >
+              <Heart
+                className={`h-4 w-4 transition-colors sm:h-5 sm:w-5 ${
+                  fav ? "fill-zest text-zest" : "text-black hover:text-zest"
+                }`}
+              />
+            </button>
+          )}
         </div>
 
         <div className="flex w-full flex-1 flex-col gap-1">
