@@ -3,6 +3,7 @@ import {
   checkHealth,
   deleteRecipe,
   editRecipe,
+  getMyRecipes,
   getRecipeById,
   getRecipes,
   postRecipe,
@@ -12,6 +13,7 @@ import { authenticateToken } from "../middlewares/authMiddleware";
 const router = Router();
 
 router.get("/", getRecipes);
+router.get("/mine", authenticateToken, getMyRecipes);
 router.get("/:id", getRecipeById);
 
 router.post("/", authenticateToken, postRecipe);

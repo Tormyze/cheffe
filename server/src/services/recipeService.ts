@@ -51,6 +51,16 @@ export const getAllRecipes = async () => {
   return recipes.map(formatRecipe);
 };
 
+export const getRecipesByUser = async (userId: string) => {
+  const recipes = await prisma.recipe.findMany({
+    where: { userId },
+    include: includeRecipeRelations,
+    orderBy: { createdAt: "desc" },
+  });
+
+  return recipes.map(formatRecipe);
+};
+
 export const getRecipeById = async (id: string) => {
   const recipe = await prisma.recipe.findUnique({
     where: { id },

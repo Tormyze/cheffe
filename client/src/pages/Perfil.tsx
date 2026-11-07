@@ -13,7 +13,11 @@ import Button from "../components/Button";
 import UserProfileCard from "../components/UserProfileCard";
 import { useAuth } from "../hooks/useAuth";
 import { useFavorites } from "../hooks/useFavorites";
-import { deleteRecipe, getRecipes, updateProfile } from "../services/recipeService";
+import {
+  deleteRecipe,
+  getMyRecipes,
+  updateProfile,
+} from "../services/recipeService";
 import type { Recipe } from "../types/recipe";
 
 export const Perfil: React.FC = () => {
@@ -30,10 +34,8 @@ export const Perfil: React.FC = () => {
     async function loadProfileData() {
       try {
         setLoading(true);
-        const allRecipes = await getRecipes();
-
-        // para apresentação inicial das minhas receitas:
-        setMyRecipes(allRecipes.slice(0, 3));
+        const recipes = await getMyRecipes();
+        setMyRecipes(recipes);
       } catch (error) {
         console.error("Erro ao carregar dados do perfil:", error);
       } finally {

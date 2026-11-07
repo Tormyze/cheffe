@@ -13,6 +13,24 @@ export const getRecipes = async (req: Request, res: Response) => {
   }
 };
 
+export const getMyRecipes = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "Usuário não autenticado." });
+    }
+
+    const recipes = await recipeService.getRecipesByUser(userId);
+    return res.status(200).json(recipes);
+  } catch (error) {
+    console.error("Erro ao buscar receitas do usuário:", error);
+    return res.status(500).json({ message: "Erro interno no servidor" });
+  }
+};
+
 export const getRecipeById = async (
   req: Request<{ id: string }>,
   res: Response,

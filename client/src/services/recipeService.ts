@@ -48,6 +48,11 @@ export const getRecipes = async (): Promise<Recipe[]> => {
   return response.data;
 };
 
+export const getMyRecipes = async (): Promise<Recipe[]> => {
+  const response = await api.get<Recipe[]>("/recipes/mine");
+  return response.data;
+};
+
 export const getRecipeById = async (id: string): Promise<Recipe> => {
   const response = await api.get<Recipe>(`/recipes/${id}`);
   return response.data;
