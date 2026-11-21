@@ -1,16 +1,25 @@
 import {
   useState,
   useEffect,
+  useRef,
   type ChangeEvent,
   type FormEvent,
   type InvalidEvent,
 } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import { ChevronDown, Image as ImageIcon, Trash2 } from "lucide-react";
+import {
+  ChevronDown,
+  ImagePlus,
+  LoaderCircle,
+  RefreshCw,
+  Trash2,
+  UploadCloud,
+} from "lucide-react";
 import {
   createRecipe,
   getRecipeById,
   updateRecipe,
+  uploadRecipeImage,
 } from "../services/recipeService";
 import { CATEGORIES, type Category } from "../types/recipe";
 
@@ -46,9 +55,13 @@ export default function ReceitaForm() {
     "Adicione os ingredientes líquidos aos poucos e misture até obter uma massa homogênea.",
   ]);
   const [imageError, setImageError] = useState(false);
+  const [imagePreview, setImagePreview] = useState("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [isDragActive, setIsDragActive] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [isLoadingRecipe, setIsLoadingRecipe] = useState(isEditing);
+  const recipeImageInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -96,6 +109,49 @@ export default function ReceitaForm() {
     event.currentTarget.setCustomValidity("");
   };
 
+  const handleRecipeImage = async (file: File | undefined) => {
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      setSubmitError("Selecione uma imagem JPEG, PNG ou WebP.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setSubmitError("A imagem deve ter no máximo 5 MB.");
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreview(previewUrl);
+    setImageError(false);
+    setSubmitError("");
+
+    try {
+      setIsUploadingImage(true);
+      const uploadedImage = await uploadRecipeImage(file);
+      setImgUrl(uploadedImage.url);
+      setImagePreview("");
+    } catch (error) {
+      console.error("Erro ao enviar imagem da receita:", error);
+      setImagePreview("");
+      setImageError(true);
+      setSubmitError("Não foi possível enviar a imagem. Tente novamente.");
+    } finally {
+      URL.revokeObjectURL(previewUrl);
+      setIsUploadingImage(false);
+    }
+  };
+
+  const handleRecipeImageChange = (
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    void handleRecipeImage(file);
+  };
+
   const addIngredient = () => {
     setIngredients((current) => [...current, emptyIngredient()]);
   };
@@ -138,6 +194,17 @@ export default function ReceitaForm() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!imgUrl) {
+      setSubmitError("Selecione uma imagem para criar a receita.");
+      return;
+    }
+
+    if (isUploadingImage) {
+      setSubmitError("Aguarde o upload da imagem terminar.");
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitError("");
 
@@ -264,54 +331,101 @@ export default function ReceitaForm() {
 
               <div className="block font-spectral text-xs font-medium">
                 Imagem da Receita
-                <div className="mt-2 flex flex-col items-start gap-4 sm:flex-row sm:items-start">
-                  <div className="min-w-0 flex-1">
-                    <input
-                      required
-                      id="recipe-image-url"
-                      type="url"
-                      value={imgUrl}
-                      onInvalid={handleRequiredInvalid}
-                      onChange={(event) => {
-                        clearRequiredInvalid(event);
-                        setImgUrl(event.target.value);
-                        setImageError(false);
-                      }}
-                      placeholder="https://images.unsplash.com/..."
-                      className="w-full rounded-xl border border-stone-300 px-3 py-2.5 font-spectral text-sm outline-none transition focus:border-zest focus:ring-1 focus:ring-zest"
-                    />
-                    <span className="mt-1 block text-xs font-normal text-stone-500">
-                      Cole o link de uma foto que dê água na boca.
-                    </span>
-                  </div>
+                <input
+                  ref={recipeImageInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleRecipeImageChange}
+                  className="hidden"
+                />
 
-                  <div className="flex w-24 shrink-0 flex-col items-center gap-1">
-                    <div className="h-16 w-24 overflow-hidden rounded-lg bg-stone-100">
-                      {imgUrl.trim() && !imageError ? (
-                        <img
-                          src={imgUrl}
-                          alt="Prévia da receita"
-                          onError={() => setImageError(true)}
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <div
-                          aria-label={
-                            imageError
-                              ? "A imagem não pôde ser carregada"
-                              : "Nenhuma imagem selecionada"
-                          }
-                          className="flex h-full w-full items-center justify-center text-stone-400"
+                {!imgUrl && !imagePreview ? (
+                  <div
+                    onDragEnter={(event) => {
+                      event.preventDefault();
+                      setIsDragActive(true);
+                    }}
+                    onDragOver={(event) => event.preventDefault()}
+                    onDragLeave={(event) => {
+                      event.preventDefault();
+                      if (!event.currentTarget.contains(event.relatedTarget as Node)) {
+                        setIsDragActive(false);
+                      }
+                    }}
+                    onDrop={(event) => {
+                      event.preventDefault();
+                      setIsDragActive(false);
+                      void handleRecipeImage(event.dataTransfer.files?.[0]);
+                    }}
+                    className={`mt-2 flex h-44 flex-col items-center justify-center rounded-xl border-2 border-dashed px-4 text-center transition-colors ${
+                      isDragActive
+                        ? "border-zest bg-orange-50"
+                        : "border-orange-300 bg-orange-50/20"
+                    }`}
+                  >
+                    {isUploadingImage ? (
+                      <>
+                        <LoaderCircle className="h-8 w-8 animate-spin text-zest" />
+                        <span className="mt-3 font-spectral text-sm text-stone-600">
+                          Otimizando imagem...
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <UploadCloud className="h-8 w-8 text-zest" aria-hidden="true" />
+                        <p className="mt-3 font-spectral text-sm text-stone-700">
+                          Arraste sua foto para cá
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => recipeImageInputRef.current?.click()}
+                          className="mt-3 rounded-xl border border-zest px-5 py-2.5 font-spectral text-sm text-zest transition-colors hover:bg-orange-50"
                         >
-                          <ImageIcon className="h-6 w-6" aria-hidden="true" />
-                        </div>
-                      )}
-                    </div>
-                    <span className="whitespace-nowrap font-spectral text-[11px] font-normal text-stone-500">
-                      Prévia da imagem
-                    </span>
+                          Escolher foto
+                        </button>
+                      </>
+                    )}
                   </div>
-                </div>
+                ) : (
+                  <div className="relative mt-2 aspect-square w-full overflow-hidden rounded-2xl bg-stone-100 shadow-sm">
+                    {imagePreview || (imgUrl && !imageError) ? (
+                      <img
+                        src={imagePreview || imgUrl}
+                        alt="Prévia da receita"
+                        onError={() => setImageError(true)}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-stone-400">
+                        <ImagePlus className="h-8 w-8" aria-hidden="true" />
+                      </div>
+                    )}
+
+                    {isUploadingImage && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div className="flex items-center gap-2 rounded-xl bg-white px-4 py-2 font-spectral text-sm text-stone-700 shadow-md">
+                          <LoaderCircle className="h-4 w-4 animate-spin text-zest" />
+                          Otimizando imagem...
+                        </div>
+                      </div>
+                    )}
+
+                    {!isUploadingImage && (
+                      <button
+                        type="button"
+                        onClick={() => recipeImageInputRef.current?.click()}
+                        className="absolute right-3 top-3 flex items-center gap-2 rounded-xl border border-zest bg-white px-3 py-2 font-spectral text-xs text-zest shadow-md transition-colors hover:bg-orange-50 hover:cursor-pointer"
+                      >
+                        <RefreshCw className="h-4 w-4" aria-hidden="true" />
+                        Trocar foto
+                      </button>
+                    )}
+                  </div>
+                )}
+
+                <p className="mt-1 font-spectral text-xs font-normal text-stone-500">
+                  Escolha uma foto do seu dispositivo. JPEG, PNG ou WebP, até 5 MB.
+                </p>
               </div>
             </div>
           </section>

@@ -99,6 +99,19 @@ export const uploadAvatar = async (
   return response.data;
 };
 
+export const uploadRecipeImage = async (
+  file: File,
+): Promise<UploadImageResponse> => {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const response = await api.post<UploadImageResponse>(
+    "/uploads?type=recipe",
+    formData,
+  );
+  return response.data;
+};
+
 export const createRecipe = async (data: CreateRecipePayload): Promise<Recipe> => {
   const response = await api.post<Recipe>("/recipes", data);
   return response.data;
