@@ -8,7 +8,7 @@ import { useAuth } from "../hooks/useAuth";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
@@ -33,7 +33,10 @@ export default function Header() {
 
             {/* badge do usuário */}
             {isAuthenticated ? (
-              <UserProfileBadge />
+              <UserProfileBadge
+                avatarUrl={user?.avatarUrl || undefined}
+                name={user?.name}
+              />
             ) : (
               <div className="text-sm flex items-center gap-4">
                 <Link to="/login">
@@ -85,7 +88,11 @@ export default function Header() {
 
             {isAuthenticated ? (
               <div className="w-full" onClick={() => setIsMenuOpen(false)}>
-                <UserProfileBadge className="w-full" />
+                <UserProfileBadge
+                  avatarUrl={user?.avatarUrl || undefined}
+                  name={user?.name}
+                  className="w-full"
+                />
               </div>
             ) : (
               <div className="flex flex-col gap-2 pt-2 border-t border-black/10">

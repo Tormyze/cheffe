@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useRef, useState, type ChangeEvent } from "react";
 import axios from "axios";
-import { ChefHat, Edit2, LogOut } from "lucide-react";
+import { Camera, ChefHat, Edit2, LogOut } from "lucide-react";
 import type {
   UpdateProfilePayload,
   User,
 } from "../services/recipeService";
+import { uploadAvatar } from "../services/recipeService";
 
 interface UserProfileCardProps {
   user: User | null;
@@ -26,6 +27,9 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [form, setForm] = useState(emptyForm);
+  const [avatarPreview, setAvatarPreview] = useState("");
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
 
   const startEditing = () => {
     if (!user) return;
@@ -42,7 +46,55 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
       setForm(emptyForm);
     }
     setError("");
+    setAvatarPreview("");
     setIsEditing(false);
+  };
+
+  const handleAvatarChange = async (
+    event: ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+
+    if (!file || !user) return;
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      setError("Selecione uma imagem JPEG, PNG ou WebP.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError("A imagem deve ter no máximo 5 MB.");
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+    setAvatarPreview(previewUrl);
+    setError("");
+    setSuccess("");
+
+    try {
+      setIsUploadingAvatar(true);
+      const uploadedImage = await uploadAvatar(file);
+      onUserUpdated({
+        ...user,
+        avatarUrl: uploadedImage.url,
+      });
+      setSuccess("Foto atualizada com sucesso.");
+    } catch (requestError) {
+      console.error("Erro ao atualizar avatar:", requestError);
+      setError(
+        axios.isAxiosError(requestError)
+          ? requestError.response?.data?.error ||
+              "Não foi possível atualizar a foto."
+          : "Não foi possível atualizar a foto.",
+      );
+    } finally {
+      URL.revokeObjectURL(previewUrl);
+      setAvatarPreview("");
+      setIsUploadingAvatar(false);
+    }
   };
 
   const saveProfile = async (event: React.FormEvent) => {
@@ -91,17 +143,72 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
   return (
     <aside className="w-full lg:w-80 shrink-0 bg-white p-6 rounded-2xl border border-black/10 flex flex-col items-center gap-6 text-center shadow-xs">
       <article className="flex flex-col items-center gap-4 w-full">
-        <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-2 border-zest/30 shadow-inner">
-          <div
-            role="img"
-            aria-label={user?.name || "Foto de perfil"}
-            className="flex h-full w-full items-center justify-center bg-orange-50 text-zest"
-          >
-            <ChefHat
-              className="h-16 w-16 stroke-[1.5] sm:h-20 sm:w-20"
-              aria-hidden="true"
-            />
-          </div>
+        <div className="relative">
+          {isEditing ? (
+            <button
+              type="button"
+              onClick={() => avatarInputRef.current?.click()}
+              disabled={isUploadingAvatar}
+              className="relative block h-32 w-32 overflow-visible rounded-full border-2 border-zest/30 bg-orange-50 shadow-inner focus:outline-none focus:ring-2 focus:ring-zest/50 disabled:cursor-not-allowed disabled:opacity-70 sm:h-40 sm:w-40 hover:cursor-pointer"
+              aria-label="Selecionar foto do perfil"
+            >
+              {avatarPreview || user?.avatarUrl ? (
+                <img
+                  src={avatarPreview || user?.avatarUrl || ""}
+                  alt={user?.name || "Foto de perfil"}
+                  className="h-full w-full rounded-full object-cover"
+                />
+              ) : (
+                <span
+                  role="img"
+                  aria-label={user?.name || "Foto de perfil"}
+                  className="flex h-full w-full items-center justify-center rounded-full text-zest"
+                >
+                  <ChefHat
+                    className="h-16 w-16 stroke-[1.5] sm:h-20 sm:w-20"
+                    aria-hidden="true"
+                  />
+                </span>
+              )}
+
+              <span className="absolute right-1 -bottom-0.5 flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-zest text-white shadow-md">
+                {isUploadingAvatar ? (
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                ) : (
+                  <Camera className="h-4 w-4" aria-hidden="true" />
+                )}
+              </span>
+            </button>
+          ) : (
+            <div className="h-32 w-32 overflow-hidden rounded-full border-2 border-zest/30 bg-orange-50 shadow-inner sm:h-40 sm:w-40">
+              {user?.avatarUrl ? (
+                <img
+                  src={user.avatarUrl}
+                  alt={user.name || "Foto de perfil"}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div
+                  role="img"
+                  aria-label={user?.name || "Foto de perfil"}
+                  className="flex h-full w-full items-center justify-center text-zest"
+                >
+                  <ChefHat
+                    className="h-16 w-16 stroke-[1.5] sm:h-20 sm:w-20"
+                    aria-hidden="true"
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
+          <input
+            ref={avatarInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleAvatarChange}
+            className="hidden"
+          />
         </div>
 
         {isEditing ? (
@@ -150,7 +257,7 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
               <button
                 type="submit"
                 disabled={isSaving}
-                className="flex-1 py-2 rounded-lg bg-zest text-white font-spectral text-sm disabled:opacity-50"
+                className="flex-1 py-2 rounded-lg bg-zest text-white font-spectral text-sm disabled:opacity-50 hover:cursor-pointer"
               >
                 {isSaving ? "Salvando..." : "Salvar"}
               </button>
@@ -158,7 +265,7 @@ export const UserProfileCard: React.FC<UserProfileCardProps> = ({
                 type="button"
                 onClick={cancelEditing}
                 disabled={isSaving}
-                className="flex-1 py-2 rounded-lg border border-gray-300 font-spectral text-sm disabled:opacity-50"
+                className="flex-1 py-2 rounded-lg border border-gray-300 font-spectral text-sm disabled:opacity-50 hover:cursor-pointer"
               >
                 Cancelar
               </button>

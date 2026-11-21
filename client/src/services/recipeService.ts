@@ -7,6 +7,7 @@ export interface User {
   username: string;
   bio: string;
   email: string;
+  avatarUrl?: string | null;
   createdAt?: string;
 }
 
@@ -41,6 +42,11 @@ export interface UpdateProfilePayload {
   name?: string;
   username?: string;
   bio?: string;
+}
+
+export interface UploadImageResponse {
+  url: string;
+  path: string;
 }
 
 export const getRecipes = async (): Promise<Recipe[]> => {
@@ -78,6 +84,19 @@ export const updateProfile = async (
 ): Promise<User> => {
   const response = await api.patch<{ user: User }>("/auth/me", data);
   return response.data.user;
+};
+
+export const uploadAvatar = async (
+  file: File,
+): Promise<UploadImageResponse> => {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const response = await api.post<UploadImageResponse>(
+    "/uploads?type=avatar",
+    formData,
+  );
+  return response.data;
 };
 
 export const createRecipe = async (data: CreateRecipePayload): Promise<Recipe> => {

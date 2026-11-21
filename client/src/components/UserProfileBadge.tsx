@@ -10,6 +10,7 @@ interface UserProfileBadgeProps {
 
 export const UserProfileBadge: React.FC<UserProfileBadgeProps> = ({
   avatarUrl,
+  name,
   className = "",
 }) => {
   return (
@@ -20,7 +21,7 @@ export const UserProfileBadge: React.FC<UserProfileBadgeProps> = ({
       {avatarUrl ? (
         <img
           src={avatarUrl}
-          alt="Foto de perfil"
+          alt={name ? `Foto de perfil de ${name}` : "Foto de perfil"}
           className="h-8 w-8 rounded-lg object-cover"
         />
       ) : (
