@@ -51,6 +51,7 @@ export const getProfile = async (req: AuthenticatedRequest, res: Response) => {
         name: true,
         username: true,
         bio: true,
+        avatarUrl: true,
         email: true,
         createdAt: true,
         recipes: true

@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import recipeRoutes from "./routes/recipeRoutes";
 import authRoutes from "./routes/authRoutes";
 import favoriteRoutes from "./routes/favoriteRoutes";
+import uploadRoutes from "./routes/uploadRoutes";
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ const PORT = process.env.PORT || 3001;
 app.use('/api/recipes', recipeRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/favorites", favoriteRoutes);
+app.use("/api/uploads", uploadRoutes);
 
 // inicia o servidor apenas se não estiver em ambiente de teste
 if (process.env.NODE_ENV !== 'test') {

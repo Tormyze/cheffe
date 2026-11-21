@@ -8,6 +8,7 @@ const userSelect = {
   name: true,
   username: true,
   bio: true,
+  avatarUrl: true,
   email: true,
   createdAt: true,
 } satisfies Prisma.UserSelect;
