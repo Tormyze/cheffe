@@ -22,6 +22,10 @@ A aplicação combina um frontend em React com uma API REST em Node.js/Express, 
 - Listas interativas de ingredientes e etapas de preparo;
 - Criação de contas e login com autenticação JWT e senhas protegidas por bcrypt;
 - Edição de perfil com username único, normalizado e bio;
+- Upload de avatar com controle de câmera e badge responsivo no perfil;
+- Upload de fotos de receitas com arrastar e soltar, prévia, carregamento e troca;
+- Validação automática e otimização WebP com Multer e Sharp;
+- Armazenamento público de imagens através do Supabase Storage;
 - Criação, edição e exclusão de receitas protegidas;
 - Receitas favoritas com atualização otimista da interface;
 - Exibição do username público do dono da receita;
@@ -41,7 +45,7 @@ O projeto segue um fluxo de design com o Figma como fonte visual de verdade:
 
 ## ♨️ Objetivos do Projeto
 
-O principal objetivo é praticar desenvolvimento web full-stack combinando React, React Router, TypeScript, Tailwind CSS, design de APIs REST, autenticação JWT, segurança de senhas com bcrypt, modelagem com Prisma, persistência em PostgreSQL, testes automatizados e deploy em produção com Vercel e Render.
+O principal objetivo é praticar desenvolvimento web full-stack combinando React, React Router, TypeScript, Tailwind CSS, design de APIs REST, autenticação JWT, segurança de senhas com bcrypt, modelagem com Prisma, persistência em PostgreSQL, processamento de imagens com Multer e Sharp, Supabase Storage, testes automatizados e deploy em produção com Vercel e Render.
 
 ## 🛠️ Tecnologias e Ferramentas
 
@@ -59,6 +63,9 @@ O principal objetivo é praticar desenvolvimento web full-stack combinando React
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-black?logo=postgresql)
 ![JWT](https://img.shields.io/badge/JWT-black?logo=jsonwebtokens)
 ![bcrypt](https://img.shields.io/badge/bcrypt-black)
+![Multer](https://img.shields.io/badge/Multer-black)
+![Sharp](https://img.shields.io/badge/Sharp-black)
+![Supabase](https://img.shields.io/badge/Supabase-black?logo=supabase)
 ![Jest](https://img.shields.io/badge/Jest-black?logo=jest)
 ![Supertest](https://img.shields.io/badge/Supertest-black)
 ![Docker](https://img.shields.io/badge/Docker-black?logo=docker)
@@ -75,6 +82,10 @@ O principal objetivo é praticar desenvolvimento web full-stack combinando React
 - [x] Autenticação baseada em JWT com rotas protegidas e senhas criptografadas com bcrypt;
 - [x] Persistência e sincronização do estado de autenticação via React Context e localStorage;
 - [x] Edição inline do perfil com validação de username único e bio;
+- [x] Upload de avatar com prévia local e sincronização automática do perfil;
+- [x] Upload de fotos de receitas com arrastar e soltar, validação, prévia, carregamento e troca;
+- [x] Normalização de imagens e otimização WebP com Sharp;
+- [x] Integração com Supabase Storage através de endpoints autenticados no backend;
 - [x] Navegação pública, busca, categorias e filtros compartilháveis por URL;
 - [x] Criação, edição e exclusão de receitas restritas ao usuário autenticado proprietário;
 - [x] Identificação pública do dono da receita com username e avatar ChefHat;
