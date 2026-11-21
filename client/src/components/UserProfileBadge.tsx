@@ -5,15 +5,17 @@ import { ChefHat } from "lucide-react";
 interface UserProfileBadgeProps {
   avatarUrl?: string;
   name?: string;
+  className?: string;
 }
 
 export const UserProfileBadge: React.FC<UserProfileBadgeProps> = ({
   avatarUrl,
+  className = "",
 }) => {
   return (
     <Link
       to="/perfil"
-      className="pl-2 pr-3.5 py-1.5 rounded-xl bg-white shadow-xs border border-black/15 inline-flex justify-center items-center gap-2.5 hover:border-zest/40 transition-all cursor-pointer"
+      className={`pl-2 pr-3.5 py-1.5 rounded-xl bg-white shadow-xs border border-black/15 inline-flex justify-center items-center gap-2.5 hover:border-zest/40 transition-all cursor-pointer ${className}`}
     >
       {avatarUrl ? (
         <img

@@ -6,6 +6,7 @@ import Button from "../components/Button";
 // import googleIcon from "../assets/icons/google.svg";
 import axios from "axios";
 import { registerUser } from "../services/recipeService";
+import { useAuth } from "../hooks/useAuth";
 
 export const Cadastro: React.FC = () => {
   const [name, setName] = useState("");
@@ -17,6 +18,7 @@ export const Cadastro: React.FC = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { signIn } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +37,9 @@ export const Cadastro: React.FC = () => {
 
     const normalizedUsername = username.trim().toLowerCase();
     if (!/^[a-z0-9_]{1,20}$/.test(normalizedUsername)) {
-      setError("Username deve ter entre 1 e 20 caracteres e conter apenas letras, números e underscore.");
+      setError(
+        "Username deve ter entre 1 e 20 caracteres e conter apenas letras, números e underscore.",
+      );
       return;
     }
 
@@ -55,7 +59,8 @@ export const Cadastro: React.FC = () => {
         password,
       });
 
-      navigate("/login");
+      await signIn({ email, password });
+      navigate("/perfil", { replace: true });
     } catch (err) {
       console.error("Erro no cadastro:", err);
       let message = "Erro ao realizar cadastro. Tente novamente.";

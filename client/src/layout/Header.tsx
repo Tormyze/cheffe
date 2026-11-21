@@ -71,21 +71,21 @@ export default function Header() {
             <Link
               to="/"
               onClick={() => setIsMenuOpen(false)}
-              className="hover:underline"
+              className="w-full py-2 text-center hover:underline"
             >
               Início
             </Link>
             <Link
               to="/receitas"
               onClick={() => setIsMenuOpen(false)}
-              className="hover:underline"
+              className="w-full py-2 text-center hover:underline"
             >
               Receitas
             </Link>
 
             {isAuthenticated ? (
-              <div onClick={() => setIsMenuOpen(false)}>
-                <UserProfileBadge />
+              <div className="w-full" onClick={() => setIsMenuOpen(false)}>
+                <UserProfileBadge className="w-full" />
               </div>
             ) : (
               <div className="flex flex-col gap-2 pt-2 border-t border-black/10">
